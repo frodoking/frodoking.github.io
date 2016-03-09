@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>关于Fragment和Activity对比中的一些理解 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介自从Android 3.0中引入fragments 的概念，根据词海的翻译可以译为:碎片、片段。其目的是为了解决不同屏幕分辩率的动态和灵活UI设计。大屏幕如平板小屏幕如手机，平板电脑的设计使得其有更多的空间来放更多的UI组件，而多出来的空间存放UI使其会产生更多的交互，从而诞生了fragments 。
+fragments 的设计不需要你来亲自管理view hierarchy 的复杂变化，通过将">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Fragment和Activity对比中的一些理解">
+<meta property="og:url" content="http://frodoking.github.io/2014/12/21/android-fragment-lifecycle/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="简介自从Android 3.0中引入fragments 的概念，根据词海的翻译可以译为:碎片、片段。其目的是为了解决不同屏幕分辩率的动态和灵活UI设计。大屏幕如平板小屏幕如手机，平板电脑的设计使得其有更多的空间来放更多的UI组件，而多出来的空间存放UI使其会产生更多的交互，从而诞生了fragments 。
+fragments 的设计不需要你来亲自管理view hierarchy 的复杂变化，通过将">
+<meta property="og:image" content="http://frodoking.github.io/img/android/complete_android_fragment_lifecycle.png">
+<meta property="og:updated_time" content="2015-09-14T06:20:08.669Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于Fragment和Activity对比中的一些理解">
+<meta name="twitter:description" content="简介自从Android 3.0中引入fragments 的概念，根据词海的翻译可以译为:碎片、片段。其目的是为了解决不同屏幕分辩率的动态和灵活UI设计。大屏幕如平板小屏幕如手机，平板电脑的设计使得其有更多的空间来放更多的UI组件，而多出来的空间存放UI使其会产生更多的交互，从而诞生了fragments 。
+fragments 的设计不需要你来亲自管理view hierarchy 的复杂变化，通过将">
+<meta name="twitter:image" content="http://frodoking.github.io/img/android/complete_android_fragment_lifecycle.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-fragment-lifecycle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/12/21/android-fragment-lifecycle/" class="article-date">
+  	<time datetime="2014-12-21T07:43:27.000Z" itemprop="datePublished">12月 21 2014</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于Fragment和Activity对比中的一些理解
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/optimization/">优化</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>自从Android 3.0中引入fragments 的概念，根据词海的翻译可以译为:碎片、片段。其目的是为了解决不同屏幕分辩率的动态和灵活UI设计。大屏幕如平板小屏幕如手机，平板电脑的设计使得其有更多的空间来放更多的UI组件，而多出来的空间存放UI使其会产生更多的交互，从而诞生了fragments 。</p><p></p>
+<p>fragments 的设计不需要你来亲自管理view hierarchy 的复杂变化，通过将Activity 的布局分散到frament 中，可以在运行时修改activity 的外观，并且由activity 管理的back stack 中保存些变化。当一个片段指定了自身的布局时，它能和其他片段配置成不同的组合，在活动中为不同的屏幕尺寸修改布局配置（小屏幕可能每次显示一个片段，而大屏幕则可以显示两个或更多）。</p><p></p>
+<p>Fragment必须被写成可重用的模块。因为fragment有自己的layout，自己进行事件响应，拥有自己的生命周期和行为，所以你可以在多个activity中包含同一个Fragment的不同实例。这对于让你的界面在不同的屏幕尺寸下都能给用户完美的体验尤其重要。</p><p></p>
+<a id="more"></a>
+<h3 id="Fragment优点"><a href="#Fragment优点" class="headerlink" title="Fragment优点"></a>Fragment优点</h3><blockquote>
+<ul>
+<li>Fragment可以使你能够将activity分离成多个可重用的组件，每个都有它自己的生命周期和UI。</li>
+<li>Fragment可以轻松得创建动态灵活的UI设计，可以适应于不同的屏幕尺寸。从手机到平板电脑。</li>
+<li>Fragment是一个独立的模块,紧紧地与activity绑定在一起。可以运行中动态地移除、加入、交换等。</li>
+<li>Fragment提供一个新的方式让你在不同的安卓设备上统一你的UI。</li>
+<li>Fragment 解决Activity间的切换不流畅，轻量切换。</li>
+<li>Fragment 替代TabActivity做导航，性能更好。</li>
+<li>Fragment 在4.2.版本中新增嵌套fragment使用方法，能够生成更好的界面效果。</li>
+<li>Fragment做局部内容更新更方便，原来为了到达这一点要把多个布局放到一个activity里面，现在可以用多Fragment来代替，只有在需要的时候才加载Fragment，提高性能。</li>
+<li>可以从startActivityForResult中接收到返回结果,但是View不能。</li>
+</ul>
+</blockquote>
+<h3 id="Fragment和Activity生命周期对比"><a href="#Fragment和Activity生命周期对比" class="headerlink" title="Fragment和Activity生命周期对比"></a>Fragment和Activity生命周期对比</h3><p>先让我们来看一下下面这一张Fragment和Activity的完整的生命周期的流程对比图</p>
+<p><img src="http://frodoking.github.io/img/android/complete_android_fragment_lifecycle.png" alt="Fragment和Activity的完整的生命周期的流程对比图"></p>
+<p>从这张图来看生命周期对比非常的明确。因此在这个地方不在做非常详细的对比和解释。</p>
+<p>下面重点来说一下getActivity（）经常null的情况，在Fragment里边有attach和dettach方法。其实这样拿到的activity都不是为null的,而且Fragment的大部分生命周期中都是可以拿到宿主Activity的。那为何会出现空的情况呢？</p>
+<p>现在对Fragment的管理类FragmentManager做一下全面的分析：</p>
+<p>Android采用了FragmentManager对所有创建的Fragment进行了按照tag方式的缓存机制，每次生命周期的执行如果系统存在相同tag的Fragment时候，这个Fragment会被重新利用。但是如果使用者不知道这样的机制的话，那么获取到当前绑定的Activity很有可能是一个过期被回收的类。(这样的场景在内存吃紧的情况下是必定出现的。)</p>
+<p>最正确的做法代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public Object instantiateItem(ViewGroup container, int position) &#123;</span><br><span class="line">       if(this.mCurTransaction == null) &#123;</span><br><span class="line">           this.mCurTransaction = this.mFragmentManager.beginTransaction();</span><br><span class="line">       &#125;</span><br><span class="line">       String name = getItem(position).getClass().getCanonicalName();</span><br><span class="line">       Fragment fragment = this.mFragmentManager.findFragmentByTag(name);</span><br><span class="line">       if(fragment != null) &#123;</span><br><span class="line">           this.mCurTransaction.attach(fragment);</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           fragment = this.getItem(position);</span><br><span class="line">           this.mCurTransaction.add(container.getId(), fragment, name);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if(fragment != this.mCurrentPrimaryItem) &#123;</span><br><span class="line">           fragment.setMenuVisibility(false);</span><br><span class="line">           fragment.setUserVisibleHint(false);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       return fragment;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是笔者在做fragment+viewpager的时候遇到的问题，这段代码是针对adapter的重写。</p>
+<p>Fragment页面相互切换的生命周期对比–场景演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">切换到该Fragment</span><br><span class="line">11-29 14:26:35.095: D/AppListFragment(7649): onAttach</span><br><span class="line">11-29 14:26:35.095: D/AppListFragment(7649): onCreate</span><br><span class="line">11-29 14:26:35.095: D/AppListFragment(7649): onCreateView</span><br><span class="line">11-29 14:26:35.100: D/AppListFragment(7649): onActivityCreated</span><br><span class="line">11-29 14:26:35.120: D/AppListFragment(7649): onStart</span><br><span class="line">11-29 14:26:35.120: D/AppListFragment(7649): onResume</span><br><span class="line"></span><br><span class="line">屏幕灭掉：</span><br><span class="line">11-29 14:27:35.185: D/AppListFragment(7649): onPause</span><br><span class="line">11-29 14:27:35.205: D/AppListFragment(7649): onSaveInstanceState</span><br><span class="line">11-29 14:27:35.205: D/AppListFragment(7649): onStop</span><br><span class="line"></span><br><span class="line">屏幕解锁</span><br><span class="line">11-29 14:33:13.240: D/AppListFragment(7649): onStart</span><br><span class="line">11-29 14:33:13.275: D/AppListFragment(7649): onResume</span><br><span class="line"></span><br><span class="line">切换到其他Fragment:</span><br><span class="line">11-29 14:33:33.655: D/AppListFragment(7649): onPause</span><br><span class="line">11-29 14:33:33.655: D/AppListFragment(7649): onStop</span><br><span class="line">11-29 14:33:33.660: D/AppListFragment(7649): onDestroyView</span><br><span class="line"></span><br><span class="line">切换回本身的Fragment:</span><br><span class="line">11-29 14:33:55.820: D/AppListFragment(7649): onCreateView</span><br><span class="line">11-29 14:33:55.825: D/AppListFragment(7649): onActivityCreated</span><br><span class="line">11-29 14:33:55.825: D/AppListFragment(7649): onStart</span><br><span class="line">11-29 14:33:55.825: D/AppListFragment(7649): onResume</span><br><span class="line"></span><br><span class="line">回到桌面</span><br><span class="line">11-29 14:34:26.590: D/AppListFragment(7649): onPause</span><br><span class="line">11-29 14:34:26.880: D/AppListFragment(7649): onSaveInstanceState</span><br><span class="line">11-29 14:34:26.880: D/AppListFragment(7649): onStop</span><br><span class="line"></span><br><span class="line">回到应用</span><br><span class="line">11-29 14:36:51.940: D/AppListFragment(7649): onStart</span><br><span class="line">11-29 14:36:51.940: D/AppListFragment(7649): onResume</span><br><span class="line"></span><br><span class="line">退出应用</span><br><span class="line">11-29 14:37:03.020: D/AppListFragment(7649): onPause</span><br><span class="line">11-29 14:37:03.155: D/AppListFragment(7649): onStop</span><br><span class="line">11-29 14:37:03.155: D/AppListFragment(7649): onDestroyView</span><br><span class="line">11-29 14:37:03.165: D/AppListFragment(7649): onDestroy</span><br><span class="line">11-29 14:37:03.165: D/AppListFragment(7649): onDetach</span><br><span class="line"></span><br><span class="line">比Activity多了一些生命周期，完整和Activity对接上</span><br></pre></td></tr></table></figure></p>
+<p>一个完善的app应该考虑好自己Fragment内部每个生命周期必须干的事情，比如onCreateView()和onViewCreated()都是不一样的。他们代表的view是否真的加载到当前app中。所以不同阶段Fragment的生命周期体现的状态时很不一样的。</p>
+<h3 id="Fragment和Activity、Fragment和Fragment之间通信"><a href="#Fragment和Activity、Fragment和Fragment之间通信" class="headerlink" title="Fragment和Activity、Fragment和Fragment之间通信"></a>Fragment和Activity、Fragment和Fragment之间通信</h3><p>官方文档推荐使用回调的方式来进行Fragment和Activity、Fragment和Fragment之间通信。但是从笔者个人开发经验来讲我更倾向于使用<a href="https://github.com/frodoking/EventBus.git" target="_blank" rel="external">EventBus</a>。</p>
+<h3 id="关于采用Fragment来逐步替代Activity的一些建议"><a href="#关于采用Fragment来逐步替代Activity的一些建议" class="headerlink" title="关于采用Fragment来逐步替代Activity的一些建议"></a>关于采用Fragment来逐步替代Activity的一些建议</h3><blockquote><p>1、使用Activity做一个容器，在每次启动新页面时候直接将启动的Fragment装入到Activity容器中，这样在Manifest中只需要注册这个Activity容器就ok了。（但是带来的问题：activity暂用了没有必要的内存）</p>
+<p>2、采用一个MainActivity+FragmentManager的方式来对所有的Fragment进行一个集中管理。这种解决方案从性能和代码量来讲都是最好的。但是可能各种页面切换的时候逻辑维护要求比较高。</p>
+</blockquote>
+<p>另外，本人贴一下关于本人在实际项目中的一种解决方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 负责装载Fragment的容器</span><br><span class="line"> * @author Frodo</span><br><span class="line"> */</span><br><span class="line">public class LoaderActivity extends BaseActivity &#123;</span><br><span class="line"></span><br><span class="line">	private FrameLayout rootView;</span><br><span class="line">	private Fragment rootFragment;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">		super.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">		rootView = new FrameLayout(this);</span><br><span class="line">		rootView.setLayoutParams(new ViewGroup.LayoutParams(</span><br><span class="line">				ViewGroup.LayoutParams.MATCH_PARENT,</span><br><span class="line">				ViewGroup.LayoutParams.MATCH_PARENT));</span><br><span class="line">		rootView.setId(getRootViewID());</span><br><span class="line">		setContentView(rootView);</span><br><span class="line"></span><br><span class="line">		Uri uri = getIntent().getData();</span><br><span class="line">		if (uri == null) &#123;</span><br><span class="line">			setError(400, null);</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		String fragmentName = uri.getFragment();</span><br><span class="line">		if (fragmentName == null) &#123;</span><br><span class="line">			setError(401, null);</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		if (savedInstanceState != null) &#123;</span><br><span class="line">		  return;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			rootFragment = (Fragment) getClassLoader().loadClass(fragmentName).newInstance();</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			setError(402, e);</span><br><span class="line">			Log.e(&quot;loader&quot;, &quot;load fragment failed&quot;, e);</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		FragmentManager fm = getSupportFragmentManager();</span><br><span class="line">		FragmentTransaction ft = fm.beginTransaction();</span><br><span class="line">		ft.replace(getRootViewID(), rootFragment);</span><br><span class="line">//		ft.add(getRootViewID(), rootFragment);</span><br><span class="line">		ft.commit();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 提供根布局的ID</span><br><span class="line">	 * </span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	protected int getRootViewID() &#123;</span><br><span class="line">		return android.R.id.primary;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public Fragment getRootFragment() &#123;</span><br><span class="line">		return rootFragment;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 加载页面遇到错误时候的处理</span><br><span class="line">	 * </span><br><span class="line">	 * @param errorCode</span><br><span class="line">	 * @param e</span><br><span class="line">	 */</span><br><span class="line">	protected void setError(int errorCode, Exception e) &#123;</span><br><span class="line">		rootView.removeAllViews();</span><br><span class="line">		TextView text = new TextView(this);</span><br><span class="line">		text.setText(&quot;载入页面失败 (&quot; + (errorCode &gt; 0 ? errorCode : -1) + &quot;)&quot;);</span><br><span class="line">		if (BuildConfig.DEBUG) &#123;</span><br><span class="line">			if (e != null) &#123;</span><br><span class="line">				text.append(&quot;\n&quot;);</span><br><span class="line">				text.append(e.toString());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		text.setLayoutParams(new FrameLayout.LayoutParams(</span><br><span class="line">				ViewGroup.LayoutParams.WRAP_CONTENT,</span><br><span class="line">				ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));</span><br><span class="line">		rootView.addView(text);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么在实际使用中通过如下方式完成页面的切换，所有页面采用Fragment的方式。在manifist文件中只需要注册很少的activity即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(&quot;btm://login&quot;));</span><br><span class="line">intent.putExtra(LoginFragmentSale.SPLASH_LOGIN, true);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure></p>
+<p>当然通过schema方式，必须有一个注册地方。代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class MappingManager &#123;</span><br><span class="line"></span><br><span class="line">    public MyMappingManager(Context ctx) &#123;</span><br><span class="line">        super(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected MappingSpec read() &#123;</span><br><span class="line">        List&lt;PageSpec&gt; pages = new ArrayList&lt;PageSpec&gt;();</span><br><span class="line"></span><br><span class="line">        // ********* 新增scheme支持在此添加项 *********</span><br><span class="line">        // 依次为host、fragment（可选）、activity（可选）、是否需要login</span><br><span class="line"></span><br><span class="line">        // 登录页面</span><br><span class="line">        pages.add(new PageSpec(&quot;login&quot;, LoginFragment.class, null, false));</span><br><span class="line">       </span><br><span class="line">		// other页面 。。。</span><br><span class="line">		</span><br><span class="line">        MappingSpec mapping = new MappingSpec(BULoaderActivity.class, pages.toArray(new PageSpec[pages.size()]));</span><br><span class="line">        return mapping;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的read()方法是在Application中发起调用注册的。</p>
+<h2 id="发现还是有同学不清楚我们到底怎么做的。因此，下面再详细说一下这个过程："><a href="#发现还是有同学不清楚我们到底怎么做的。因此，下面再详细说一下这个过程：" class="headerlink" title="发现还是有同学不清楚我们到底怎么做的。因此，下面再详细说一下这个过程："></a>发现还是有同学不清楚我们到底怎么做的。因此，下面再详细说一下这个过程：</h2><p>首先，btm前缀会在manifest中定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">       android:name=&quot;.RedirectActivity&quot;</span><br><span class="line">       android:label=&quot;redirect&quot;</span><br><span class="line">       android:screenOrientation=&quot;portrait&quot; &gt;</span><br><span class="line">       &lt;intent-filter&gt;</span><br><span class="line">           &lt;action android:name=&quot;android.intent.action.VIEW&quot; /&gt;</span><br><span class="line"></span><br><span class="line">           &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;</span><br><span class="line">           &lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; /&gt;</span><br><span class="line"></span><br><span class="line">           &lt;data android:scheme=&quot;btm&quot; /&gt;</span><br><span class="line">       &lt;/intent-filter&gt;</span><br><span class="line">   &lt;/activity&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以接收到所有btm开头的scheme了。再来看看RedirectActivity中具体做跳转的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">protected void doRedirect() &#123;</span><br><span class="line">		Intent orig = getIntent();</span><br><span class="line">		Intent intent = new Intent(orig.getAction(), orig.getData());</span><br><span class="line">		intent.putExtras(orig);</span><br><span class="line">		intent = urlMap(intent);</span><br><span class="line">		try &#123;</span><br><span class="line">			// 避免进入死循环</span><br><span class="line">			List&lt;ResolveInfo&gt; l = getPackageManager().queryIntentActivities(</span><br><span class="line">					intent, 0);</span><br><span class="line">			if (l.size() == 1) &#123;</span><br><span class="line">				ResolveInfo ri = l.get(0);</span><br><span class="line">				if (getPackageName().equals(ri.activityInfo.packageName)) &#123;</span><br><span class="line">					if (getClass().getName().equals(ri.activityInfo.name)) &#123;</span><br><span class="line">						throw new Exception(&quot;infinite loop&quot;);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; else if (l.size() &gt; 1) &#123;</span><br><span class="line">				// should not happen, do we allow this?</span><br><span class="line">			&#125;</span><br><span class="line">			startActivity(intent);</span><br><span class="line">			finish();</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			setError(402, e);</span><br><span class="line">			Log.e(&quot;app&quot;, &quot;unable to redirect &quot; + getIntent(), e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>urlMap是非常重要的scheme分发映射点。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public Intent urlMap(Intent intent) &#123;</span><br><span class="line">       do &#123;</span><br><span class="line">           Uri uri = intent.getData();</span><br><span class="line">           if (uri == null) &#123;</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line">           if (uri.getScheme() == null</span><br><span class="line">                   || !PRIMARY_SCHEME.equals(uri.getScheme())) &#123;</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           MappingManager mManager = mappingManager();</span><br><span class="line">           if (mManager == null) &#123;</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           MappingSpec mSpec = mManager.mappingSpec();</span><br><span class="line">           if (mSpec == null) &#123;</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           String host = uri.getHost();</span><br><span class="line">           if (TextUtils.isEmpty(host))</span><br><span class="line">               break;</span><br><span class="line">           host = host.toLowerCase();</span><br><span class="line"></span><br><span class="line">           PageSpec page = mSpec.getPage(host);</span><br><span class="line">           if (page == null) &#123;</span><br><span class="line">               Log.w(&quot;loader&quot;, &quot;host (&quot; + host</span><br><span class="line">                       + &quot;) Can&apos;t find the page in mapping.&quot;);</span><br><span class="line">               break;</span><br><span class="line">           &#125;</span><br><span class="line">           Class&lt;?&gt; fragment = page.fragment;</span><br><span class="line"></span><br><span class="line">           intent.putExtra(&quot;_login&quot;, page.login);</span><br><span class="line"></span><br><span class="line">           Class&lt;?&gt; defaultLoader = mSpec.loader;</span><br><span class="line">           Class&lt;?&gt; loader = null;</span><br><span class="line">           if (page.activity != null) &#123;</span><br><span class="line">               loader = page.activity;</span><br><span class="line"></span><br><span class="line">           &#125; else if (defaultLoader != null) &#123;// defaultLoader is always null</span><br><span class="line">               loader = defaultLoader;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           if (loader != null) &#123;</span><br><span class="line">               intent.setClass(this, loader);</span><br><span class="line"></span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               intent.setClass(this, LoaderActivity.class);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           String query = uri.getQuery();</span><br><span class="line"></span><br><span class="line">           uri = Uri.parse(String.format(&quot;%s://%s?%s#%s&quot;, uri.getScheme(),</span><br><span class="line">                   host, query, fragment == null ? &quot;&quot; : fragment.getName()));</span><br><span class="line">           intent.setData(uri);</span><br><span class="line"></span><br><span class="line">       &#125; while (false);</span><br><span class="line"></span><br><span class="line">       return intent;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这里会有一个很关键的地方就是intent.setClass(this, LoaderActivity.class)，通过这样可以加载Fragment承载的Activity。<br>另外这样做大伙儿可能觉得比较繁琐，但是这个通过Uri的方式来做的意义就是比如当你的应用需要像系统打电话，发短信这种功能的时候。这将是非常好的实现方式。</p>
+<p>OK，这篇文章连续补了几次。该写的应该都写出来了，也感谢各位的关注。</p>
+<p>Have fun！！！</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/02/01/android-mvc-mvp-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          MVC和MVP在app中的对比分析以及实际应用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/10/01/android-app-whole-solution/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于Android中App的整体解决方案的一些思考</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-fragment-lifecycle" data-title="关于Fragment和Activity对比中的一些理解" data-url="http://frodoking.github.io/2014/12/21/android-fragment-lifecycle/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

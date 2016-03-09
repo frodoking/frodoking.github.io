@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Retrofit源码解析 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前花了一段时间整理过一篇文章OKHttp源码解析。所以今天打算把一个包装工具Retrofit做一下源码解析。
+Retrofit和Java领域的ORM概念类似，ORM把结构化数据转换为Java对象，而Retrofit把REST API返回的数据转化为Java对象方便操作。同时还封装了网络代码的调用。这个网络代码默认采用了OKHttp的方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Retrofit源码解析">
+<meta property="og:url" content="http://frodoking.github.io/2015/05/16/android-retrofit/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="之前花了一段时间整理过一篇文章OKHttp源码解析。所以今天打算把一个包装工具Retrofit做一下源码解析。
+Retrofit和Java领域的ORM概念类似，ORM把结构化数据转换为Java对象，而Retrofit把REST API返回的数据转化为Java对象方便操作。同时还封装了网络代码的调用。这个网络代码默认采用了OKHttp的方式。">
+<meta property="og:updated_time" content="2015-09-14T06:44:22.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Retrofit源码解析">
+<meta name="twitter:description" content="之前花了一段时间整理过一篇文章OKHttp源码解析。所以今天打算把一个包装工具Retrofit做一下源码解析。
+Retrofit和Java领域的ORM概念类似，ORM把结构化数据转换为Java对象，而Retrofit把REST API返回的数据转化为Java对象方便操作。同时还封装了网络代码的调用。这个网络代码默认采用了OKHttp的方式。">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-retrofit" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/05/16/android-retrofit/" class="article-date">
+  	<time datetime="2015-05-16T03:59:24.000Z" itemprop="datePublished">5月 16 2015</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Retrofit源码解析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前花了一段时间整理过一篇文章<a href="/2015/03/12/android-okhttp/">OKHttp源码解析</a>。所以今天打算把一个包装工具Retrofit做一下源码解析。</p>
+<p>Retrofit和Java领域的ORM概念类似，ORM把结构化数据转换为Java对象，而Retrofit把REST API返回的数据转化为Java对象方便操作。同时还封装了网络代码的调用。这个网络代码默认采用了OKHttp的方式。<br><a id="more"></a></p>
+<h3 id="Retrofit使用"><a href="#Retrofit使用" class="headerlink" title="Retrofit使用"></a>Retrofit使用</h3><p>这一节主要使用源码内部的一个实例来展示Retrofit的使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class GitHubClient &#123;</span><br><span class="line">  private static final String API_URL = &quot;https://api.github.com&quot;;</span><br><span class="line"></span><br><span class="line">  static class Contributor &#123;</span><br><span class="line">    String login;</span><br><span class="line">    int contributions;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  interface GitHub &#123;</span><br><span class="line">    @GET(&quot;/repos/&#123;owner&#125;/&#123;repo&#125;/contributors&quot;)</span><br><span class="line">    List&lt;Contributor&gt; contributors(</span><br><span class="line">        @Path(&quot;owner&quot;) String owner,</span><br><span class="line">        @Path(&quot;repo&quot;) String repo</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static void main(String... args) &#123;</span><br><span class="line">    // Create a very simple REST adapter which points the GitHub API endpoint.</span><br><span class="line">    RestAdapter restAdapter = new RestAdapter.Builder()</span><br><span class="line">        .setEndpoint(API_URL)</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    // Create an instance of our GitHub API interface.</span><br><span class="line">    GitHub github = restAdapter.create(GitHub.class);</span><br><span class="line"></span><br><span class="line">    // Fetch and print a list of the contributors to this library.</span><br><span class="line">    List&lt;Contributor&gt; contributors = github.contributors(&quot;square&quot;, &quot;retrofit&quot;);</span><br><span class="line">    for (Contributor contributor : contributors) &#123;</span><br><span class="line">      System.out.println(contributor.login + &quot; (&quot; + contributor.contributions + &quot;)&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<ul>
+<li>定义一个REST API接口。该接口定义了一个函数listRepos , 该函数会通过HTTP GET请求去访问服务器的/users/{user}/repos路径并把返回的结果封装为List<repo> Java对象返回。其中URL路径中的{user}的值为listRepos函数中的参数user的取值。然后通过RestAdapter类来生成一个GitHubService接口的实现；</repo></li>
+<li>获取接口的实现，调用接口函数来和服务器交互；</li>
+</ul>
+</blockquote>
+<h3 id="RestAdapter-Builder-构建器模式"><a href="#RestAdapter-Builder-构建器模式" class="headerlink" title="RestAdapter.Builder 构建器模式"></a>RestAdapter.Builder 构建器模式</h3><p>Builder模式主要出发点是将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。<br>使用场景：经常在构造器中装配的域非常多、同时不同场景下需要初始化的域（或者传入的域）不一样的时候。这样的好处就是按需构造，非常灵活。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * Build a new &#123;@link RestAdapter&#125;.</span><br><span class="line">   * &lt;p&gt;</span><br><span class="line">   * Calling &#123;@link #setEndpoint&#125; is required before calling &#123;@link #build()&#125;. All other methods</span><br><span class="line">   * are optional.</span><br><span class="line">   */</span><br><span class="line">  public static class Builder &#123;</span><br><span class="line">    private Endpoint endpoint;</span><br><span class="line">    private OkHttpClient client;</span><br><span class="line">    private Executor callbackExecutor;</span><br><span class="line">    private RequestInterceptor requestInterceptor;</span><br><span class="line">    private Converter converter;</span><br><span class="line">    private ErrorHandler errorHandler;</span><br><span class="line"></span><br><span class="line">    // ....省略...</span><br><span class="line">	</span><br><span class="line">    /** Create the &#123;@link RestAdapter&#125; instances. */</span><br><span class="line">    public RestAdapter build() &#123;</span><br><span class="line">      if (endpoint == null) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;Endpoint may not be null.&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      ensureSaneDefaults();</span><br><span class="line">      return new RestAdapter(endpoint, client, callbackExecutor, requestInterceptor, converter,</span><br><span class="line">          errorHandler);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void ensureSaneDefaults() &#123;</span><br><span class="line">      if (converter == null) &#123;</span><br><span class="line">        converter = Platform.get().defaultConverter();</span><br><span class="line">      &#125;</span><br><span class="line">      if (client == null) &#123;</span><br><span class="line">        client = Platform.get().defaultClient();</span><br><span class="line">      &#125;</span><br><span class="line">      if (callbackExecutor == null) &#123;</span><br><span class="line">        callbackExecutor = Platform.get().defaultCallbackExecutor();</span><br><span class="line">      &#125;</span><br><span class="line">      if (errorHandler == null) &#123;</span><br><span class="line">        errorHandler = ErrorHandler.DEFAULT;</span><br><span class="line">      &#125;</span><br><span class="line">      if (requestInterceptor == null) &#123;</span><br><span class="line">        requestInterceptor = RequestInterceptor.NONE;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在RestAdapter需要指定url根地址、采用的网络客户端、回调线程池、请求拦截器、返回数据格式器和错误处理。这些参数在Builder中得到了接管，不过值得注意的是RestAdapter不应该持有Builder（之前曾经看到过一些开发同学这样干过）。参数在在builder中都创建了默认值（默认自适应平台，默认返回数据JSON格式化，默认Error处理方式以及请求拦截器），默认值是提高代码健壮性的一中方式，这是一个非常好的习惯。留给使用的只需要指定endpoint就可以工作了。</p>
+<h3 id="RestAdapter-create-代理模式"><a href="#RestAdapter-create-代理模式" class="headerlink" title="RestAdapter.create  代理模式"></a>RestAdapter.create  代理模式</h3><p>很多同学在开发中或多或少是遇到过代理，而实际使用我想肯定不多。感觉也不是那么好用。在上面的实例中，RestAdapter.create很好的展现出了java中对代理的支持与实现应用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public &lt;T&gt; T create(Class&lt;T&gt; service) &#123;</span><br><span class="line">    Utils.validateServiceClass(service);</span><br><span class="line">    return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class&lt;?&gt;[] &#123; service &#125;,</span><br><span class="line">        new RestHandler(getMethodInfoCache(service)));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>Proxy.newProxyInstance使用这里不做介绍，重点说说实现了InvocationHandler接口的RestHandler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">  private class RestHandler implements InvocationHandler &#123;</span><br><span class="line">    private final Map&lt;Method, MethodInfo&gt; methodDetailsCache;</span><br><span class="line"></span><br><span class="line">    RestHandler(Map&lt;Method, MethodInfo&gt; methodDetailsCache) &#123;</span><br><span class="line">      this.methodDetailsCache = methodDetailsCache;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;) //</span><br><span class="line">    @Override public Object invoke(Object proxy, Method method, final Object[] args)</span><br><span class="line">        throws Throwable &#123;</span><br><span class="line">      // If the method is a method from Object then defer to normal invocation.</span><br><span class="line">      if (method.getDeclaringClass() == Object.class) &#123;</span><br><span class="line">        return method.invoke(this, args);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      MethodInfo methodInfo = getMethodInfo(methodDetailsCache, method);</span><br><span class="line">      Request request = createRequest(methodInfo, args);</span><br><span class="line">      switch (methodInfo.executionType) &#123;</span><br><span class="line">        case SYNC:</span><br><span class="line">          return invokeSync(methodInfo, request);</span><br><span class="line">        case ASYNC:</span><br><span class="line">          invokeAsync(methodInfo, request, (Callback) args[args.length - 1]);</span><br><span class="line">          return null; // Async has void return type.</span><br><span class="line">        case RX:</span><br><span class="line">          return invokeRx(methodInfo, request);</span><br><span class="line">        default:</span><br><span class="line">          throw new IllegalStateException(&quot;Unknown response type: &quot; + methodInfo.executionType);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当调用起github.contributors(“square”, “retrofit”)这个方法的时候，会触发RestHandler的拦截。下面一步一步来看看在拦截的地方做了什么：<br>在第一步如果是构造器方法则返回应该不难理解，这里主要说方法的拆分与缓存（getMethodInfo(methodDetailsCache, method)）：<br><strong>1、根据当前方法获取缓存中解析的方法信息，如果有就不用再去解析方法，反之重新创建方法信息</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">static MethodInfo getMethodInfo(Map&lt;Method, MethodInfo&gt; cache, Method method) &#123;</span><br><span class="line">    synchronized (cache) &#123;</span><br><span class="line">      MethodInfo methodInfo = cache.get(method);</span><br><span class="line">      if (methodInfo == null) &#123;</span><br><span class="line">        methodInfo = new MethodInfo(method);</span><br><span class="line">        cache.put(method, methodInfo);</span><br><span class="line">      &#125;</span><br><span class="line">      return methodInfo;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>2、根据当前方法解析方法信息</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br></pre></td><td class="code"><pre><span class="line">final class MethodInfo &#123;</span><br><span class="line"></span><br><span class="line">	enum ExecutionType &#123;</span><br><span class="line">		ASYNC,</span><br><span class="line">		RX,</span><br><span class="line">		SYNC</span><br><span class="line">	&#125;</span><br><span class="line">	enum RequestType &#123;</span><br><span class="line">    /** No content-specific logic required. */</span><br><span class="line">    SIMPLE,</span><br><span class="line">    /** Multi-part request body. */</span><br><span class="line">    MULTIPART,</span><br><span class="line">    /** Form URL-encoded request body. */</span><br><span class="line">    FORM_URL_ENCODED</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	MethodInfo(Method method) &#123;</span><br><span class="line">    this.method = method;</span><br><span class="line">    executionType = parseResponseType();</span><br><span class="line"></span><br><span class="line">    parseMethodAnnotations();</span><br><span class="line">    parseParameters();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /** Loads &#123;@link #responseObjectType&#125;. */</span><br><span class="line">  private ExecutionType parseResponseType() &#123;</span><br><span class="line">    // Synchronous methods have a non-void return type.</span><br><span class="line">    // Observable methods have a return type of Observable.</span><br><span class="line">    Type returnType = method.getGenericReturnType();</span><br><span class="line"></span><br><span class="line">    // Asynchronous methods should have a Callback type as the last argument.</span><br><span class="line">    Type lastArgType = null;</span><br><span class="line">    Class&lt;?&gt; lastArgClass = null;</span><br><span class="line">    Type[] parameterTypes = method.getGenericParameterTypes();</span><br><span class="line">    if (parameterTypes.length &gt; 0) &#123;</span><br><span class="line">      Type typeToCheck = parameterTypes[parameterTypes.length - 1];</span><br><span class="line">      lastArgType = typeToCheck;</span><br><span class="line">      if (typeToCheck instanceof ParameterizedType) &#123;</span><br><span class="line">        typeToCheck = ((ParameterizedType) typeToCheck).getRawType();</span><br><span class="line">      &#125;</span><br><span class="line">      if (typeToCheck instanceof Class) &#123;</span><br><span class="line">        lastArgClass = (Class&lt;?&gt;) typeToCheck;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    boolean hasReturnType = returnType != void.class;</span><br><span class="line">    boolean hasCallback = lastArgClass != null &amp;&amp; Callback.class.isAssignableFrom(lastArgClass);</span><br><span class="line"></span><br><span class="line">    // Check for invalid configurations.</span><br><span class="line">    if (hasReturnType &amp;&amp; hasCallback) &#123;</span><br><span class="line">      throw methodError(&quot;Must have return type or Callback as last argument, not both.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (!hasReturnType &amp;&amp; !hasCallback) &#123;</span><br><span class="line">      throw methodError(&quot;Must have either a return type or Callback as last argument.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (hasReturnType) &#123;</span><br><span class="line">      if (Platform.HAS_RX_JAVA) &#123;</span><br><span class="line">        Class rawReturnType = Types.getRawType(returnType);</span><br><span class="line">        if (RxSupport.isObservable(rawReturnType)) &#123;</span><br><span class="line">          returnType = RxSupport.getObservableType(returnType, rawReturnType);</span><br><span class="line">          responseObjectType = getParameterUpperBound((ParameterizedType) returnType);</span><br><span class="line">          return ExecutionType.RX;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      responseObjectType = returnType;</span><br><span class="line">      return ExecutionType.SYNC;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastArgType = Types.getSupertype(lastArgType, Types.getRawType(lastArgType), Callback.class);</span><br><span class="line">    if (lastArgType instanceof ParameterizedType) &#123;</span><br><span class="line">      responseObjectType = getParameterUpperBound((ParameterizedType) lastArgType);</span><br><span class="line">      return ExecutionType.ASYNC;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    throw methodError(&quot;Last parameter must be of type Callback&lt;X&gt; or Callback&lt;? super X&gt;.&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /** Loads &#123;@link #requestMethod&#125; and &#123;@link #requestType&#125;. */</span><br><span class="line">  private void parseMethodAnnotations() &#123;</span><br><span class="line">    for (Annotation methodAnnotation : method.getAnnotations()) &#123;</span><br><span class="line">      Class&lt;? extends Annotation&gt; annotationType = methodAnnotation.annotationType();</span><br><span class="line">      if (annotationType == DELETE.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;DELETE&quot;, ((DELETE) methodAnnotation).value(), false);</span><br><span class="line">      &#125; else if (annotationType == GET.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;GET&quot;, ((GET) methodAnnotation).value(), false);</span><br><span class="line">      &#125; else if (annotationType == HEAD.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;HEAD&quot;, ((HEAD) methodAnnotation).value(), false);</span><br><span class="line">      &#125; else if (annotationType == PATCH.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;PATCH&quot;, ((PATCH) methodAnnotation).value(), true);</span><br><span class="line">      &#125; else if (annotationType == POST.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;POST&quot;, ((POST) methodAnnotation).value(), true);</span><br><span class="line">      &#125; else if (annotationType == PUT.class) &#123;</span><br><span class="line">        parseHttpMethodAndPath(&quot;PUT&quot;, ((PUT) methodAnnotation).value(), true);</span><br><span class="line">      &#125; else if (annotationType == HTTP.class) &#123;</span><br><span class="line">        HTTP http = (HTTP) methodAnnotation;</span><br><span class="line">        parseHttpMethodAndPath(http.method(), http.path(), http.hasBody());</span><br><span class="line">      &#125; else if (annotationType == Headers.class) &#123;</span><br><span class="line">        String[] headersToParse = ((Headers) methodAnnotation).value();</span><br><span class="line">        if (headersToParse.length == 0) &#123;</span><br><span class="line">          throw methodError(&quot;@Headers annotation is empty.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        headers = parseHeaders(headersToParse);</span><br><span class="line">      &#125; else if (annotationType == Multipart.class) &#123;</span><br><span class="line">        if (requestType != RequestType.SIMPLE) &#123;</span><br><span class="line">          throw methodError(&quot;Only one encoding annotation is allowed.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        throw new UnsupportedOperationException(&quot;Multipart shall return!&quot;);</span><br><span class="line">        //requestType = RequestType.MULTIPART;</span><br><span class="line">      &#125; else if (annotationType == FormUrlEncoded.class) &#123;</span><br><span class="line">        if (requestType != RequestType.SIMPLE) &#123;</span><br><span class="line">          throw methodError(&quot;Only one encoding annotation is allowed.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        throw new UnsupportedOperationException(&quot;Form URL encoding shall return!&quot;);</span><br><span class="line">        //requestType = RequestType.FORM_URL_ENCODED;</span><br><span class="line">      &#125; else if (annotationType == Streaming.class) &#123;</span><br><span class="line">        if (responseObjectType != Response.class) &#123;</span><br><span class="line">          throw methodError(</span><br><span class="line">              &quot;Only methods having %s as data type are allowed to have @%s annotation.&quot;,</span><br><span class="line">              Response.class.getSimpleName(), Streaming.class.getSimpleName());</span><br><span class="line">        &#125;</span><br><span class="line">        isStreaming = true;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (requestMethod == null) &#123;</span><br><span class="line">      throw methodError(&quot;HTTP method annotation is required (e.g., @GET, @POST, etc.).&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (!requestHasBody) &#123;</span><br><span class="line">      if (requestType == RequestType.MULTIPART) &#123;</span><br><span class="line">        throw methodError(</span><br><span class="line">            &quot;Multipart can only be specified on HTTP methods with request body (e.g., @POST).&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      if (requestType == RequestType.FORM_URL_ENCODED) &#123;</span><br><span class="line">        throw methodError(&quot;FormUrlEncoded can only be specified on HTTP methods with request body &quot;</span><br><span class="line">                + &quot;(e.g., @POST).&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /**</span><br><span class="line">   * Loads &#123;@link #requestParamAnnotations&#125;. Must be called after &#123;@link #parseMethodAnnotations()&#125;.</span><br><span class="line">   */</span><br><span class="line">  private void parseParameters() &#123;</span><br><span class="line">    Type[] methodParameterTypes = method.getGenericParameterTypes();</span><br><span class="line"></span><br><span class="line">    Annotation[][] methodParameterAnnotationArrays = method.getParameterAnnotations();</span><br><span class="line">    int count = methodParameterAnnotationArrays.length;</span><br><span class="line">    if (executionType == ExecutionType.ASYNC) &#123;</span><br><span class="line">      count -= 1; // Callback is last argument when not a synchronous method.</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Annotation[] requestParamAnnotations = new Annotation[count];</span><br><span class="line"></span><br><span class="line">    boolean gotField = false;</span><br><span class="line">    boolean gotPart = false;</span><br><span class="line">    boolean gotBody = false;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; count; i++) &#123;</span><br><span class="line">      Type methodParameterType = methodParameterTypes[i];</span><br><span class="line">      Annotation[] methodParameterAnnotations = methodParameterAnnotationArrays[i];</span><br><span class="line">      if (methodParameterAnnotations != null) &#123;</span><br><span class="line">        for (Annotation methodParameterAnnotation : methodParameterAnnotations) &#123;</span><br><span class="line">          Class&lt;? extends Annotation&gt; methodAnnotationType =</span><br><span class="line">              methodParameterAnnotation.annotationType();</span><br><span class="line"></span><br><span class="line">          if (methodAnnotationType == Path.class) &#123;</span><br><span class="line">            String name = ((Path) methodParameterAnnotation).value();</span><br><span class="line">            validatePathName(i, name);</span><br><span class="line">          &#125; else if (methodAnnotationType == Query.class) &#123;</span><br><span class="line">            // Nothing to do.</span><br><span class="line">          &#125; else if (methodAnnotationType == QueryMap.class) &#123;</span><br><span class="line">            if (!Map.class.isAssignableFrom(Types.getRawType(methodParameterType))) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@QueryMap parameter type must be Map.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125; else if (methodAnnotationType == Header.class) &#123;</span><br><span class="line">            // Nothing to do.</span><br><span class="line">          &#125; else if (methodAnnotationType == Field.class) &#123;</span><br><span class="line">            if (requestType != RequestType.FORM_URL_ENCODED) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@Field parameters can only be used with form encoding.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            gotField = true;</span><br><span class="line">          &#125; else if (methodAnnotationType == FieldMap.class) &#123;</span><br><span class="line">            if (requestType != RequestType.FORM_URL_ENCODED) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@FieldMap parameters can only be used with form encoding.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            if (!Map.class.isAssignableFrom(Types.getRawType(methodParameterType))) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@FieldMap parameter type must be Map.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            gotField = true;</span><br><span class="line">          &#125; else if (methodAnnotationType == Part.class) &#123;</span><br><span class="line">            if (requestType != RequestType.MULTIPART) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@Part parameters can only be used with multipart encoding.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            gotPart = true;</span><br><span class="line">          &#125; else if (methodAnnotationType == PartMap.class) &#123;</span><br><span class="line">            if (requestType != RequestType.MULTIPART) &#123;</span><br><span class="line">              throw parameterError(i,</span><br><span class="line">                  &quot;@PartMap parameters can only be used with multipart encoding.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            if (!Map.class.isAssignableFrom(Types.getRawType(methodParameterType))) &#123;</span><br><span class="line">              throw parameterError(i, &quot;@PartMap parameter type must be Map.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            gotPart = true;</span><br><span class="line">          &#125; else if (methodAnnotationType == Body.class) &#123;</span><br><span class="line">            if (requestType != RequestType.SIMPLE) &#123;</span><br><span class="line">              throw parameterError(i,</span><br><span class="line">                  &quot;@Body parameters cannot be used with form or multi-part encoding.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            if (gotBody) &#123;</span><br><span class="line">              throw methodError(&quot;Multiple @Body method annotations found.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            requestObjectType = methodParameterType;</span><br><span class="line">            gotBody = true;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            // This is a non-Retrofit annotation. Skip to the next one.</span><br><span class="line">            continue;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          if (requestParamAnnotations[i] != null) &#123;</span><br><span class="line">            throw parameterError(i,</span><br><span class="line">                &quot;Multiple Retrofit annotations found, only one allowed: @%s, @%s.&quot;,</span><br><span class="line">                requestParamAnnotations[i].annotationType().getSimpleName(),</span><br><span class="line">                methodAnnotationType.getSimpleName());</span><br><span class="line">          &#125;</span><br><span class="line">          requestParamAnnotations[i] = methodParameterAnnotation;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      if (requestParamAnnotations[i] == null) &#123;</span><br><span class="line">        throw parameterError(i, &quot;No Retrofit annotation found.&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (requestType == RequestType.SIMPLE &amp;&amp; !requestHasBody &amp;&amp; gotBody) &#123;</span><br><span class="line">      throw methodError(&quot;Non-body HTTP method cannot contain @Body or @TypedOutput.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (requestType == RequestType.FORM_URL_ENCODED &amp;&amp; !gotField) &#123;</span><br><span class="line">      throw methodError(&quot;Form-encoded method must contain at least one @Field.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (requestType == RequestType.MULTIPART &amp;&amp; !gotPart) &#123;</span><br><span class="line">      throw methodError(&quot;Multipart method must contain at least one @Part.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    this.requestParamAnnotations = requestParamAnnotations;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这一段代码有点多，本打算只截取最重要的地方，不过后来发现还是全部展示出来最有好的说服力。<br>在最开始实例中定义了一个API接口，采用了Annotation注解的方式定义了每一个网络请求的方式（GET/POST,相对路径，在路径中的请求参数，方法参数中的请求参数）。</p>
+<blockquote>
+<ol>
+<li>解析执行类型，在这里代码采用了检测最后一个参数是否是Callback类型做判断，如果最后一个是Callback类型参数，那么采用异步的方式，反之采用同步。另外在JAVA平台的时候还会根据返回类型来判断是否符合RX方式。</li>
+<li>解析Annotation注解（重点解析GET/POST，相对路径，在路径中的请求参数）。标签非常的多（GET，POST，PUT，DELETE和HEAD），主要是指定每一个作用域的意图。更值得一提的是在相对路径中可以采用“xxx?a=1&amp;b=2”的方式带入参数，也可以使用@Path，@Query，@Body，@Field来表示。</li>
+<li>在请求参数的解析方法中，根据这些不同的标注来返回当前的请求方式是普通请求、multi-part还是form形式。</li>
+</ol>
+</blockquote>
+<p>在最后的invoke调用中只需要根据当前方法拿到解析出来的方法信息执行对应的网络请求即可。</p>
+<blockquote>
+<p>1.同步直接返回数据<br>2.异步这加入异步调用队列，采用Callback返回<br>3.RX方式（省略…）</p>
+</blockquote>
+<p>专门再看一下Retrofit源码，主要是个人觉得采用了注解+反射代理的方式可以非常灵活的将复杂的业务逻辑进行拆分解耦。同时从代码结构上来看也会非常的清晰。这都是值得开发者学习的地方。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          OKHttp源码解析-ConnectionPool对Connection重用机制&amp;Http/Https/SPDY协议选择
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/10/ide-from-eclipse-to-intellij/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">从Eclipse到Intellij</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-retrofit" data-title="Retrofit源码解析" data-url="http://frodoking.github.io/2015/05/16/android-retrofit/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

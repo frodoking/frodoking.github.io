@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Android Weekly 值得收藏的项 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第193期 
+
+Avoiding cold starts on Android  
+
+ 第192期 
+
+What’s under the hood of the OkHttp’s cache?  
+
+ 第191期 
+
+10 things you didn’t know about Android’s Service component
+
+ 第190期 
+
+Fixing Memory Leaks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly 值得收藏的项">
+<meta property="og:url" content="http://frodoking.github.io/2016/03/01/android-weekly/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="第193期 
+
+Avoiding cold starts on Android  
+
+ 第192期 
+
+What’s under the hood of the OkHttp’s cache?  
+
+ 第191期 
+
+10 things you didn’t know about Android’s Service component
+
+ 第190期 
+
+Fixing Memory Leaks">
+<meta property="og:updated_time" content="2016-03-01T03:30:29.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Weekly 值得收藏的项">
+<meta name="twitter:description" content="第193期 
+
+Avoiding cold starts on Android  
+
+ 第192期 
+
+What’s under the hood of the OkHttp’s cache?  
+
+ 第191期 
+
+10 things you didn’t know about Android’s Service component
+
+ 第190期 
+
+Fixing Memory Leaks">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-weekly" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/01/android-weekly/" class="article-date">
+  	<time datetime="2016-03-01T03:30:27.000Z" itemprop="datePublished">3月 1 2016</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android Weekly 值得收藏的项
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong> 第193期 </strong></p>
+<ol>
+<li><a href="http://saulmm.github.io/avoding-android-cold-starts" target="_blank" rel="external">Avoiding cold starts on Android</a>  </li>
+</ol>
+<p><strong> 第192期 </strong></p>
+<ol>
+<li><a href="http://www.schibsted.pl/2016/02/hood-okhttps-cache/" target="_blank" rel="external">What’s under the hood of the OkHttp’s cache?</a>  </li>
+</ol>
+<p><strong> 第191期 </strong></p>
+<ol>
+<li><a href="https://medium.com/@workingkills/10-things-didn-t-know-about-android-s-service-component-a2880b74b2b3#.eu5ls3cic" target="_blank" rel="external">10 things you didn’t know about Android’s Service component</a></li>
+</ol>
+<p><strong> 第190期 </strong></p>
+<ol>
+<li><a href="http://riggaroo.co.za/fixing-memory-leaks-in-android-outofmemoryerror/" target="_blank" rel="external">Fixing Memory Leaks in Android - OutOfMemoryError</a></li>
+</ol>
+<p><strong> 第189期 </strong></p>
+<ol>
+<li><a href="https://medium.com/@v.danylo/implementing-video-playback-in-a-scrolled-list-listview-recyclerview-d04bc2148429#.mzto2r2u2" target="_blank" rel="external">Implementing video playback in a scrolled list </a><a id="more"></a>
+</li>
+</ol>
+<p><strong> 第182期 </strong></p>
+<ol>
+<li><a href="https://medium.com/ribot-labs/android-application-architecture-8b6e34acda65#.io0zhw6cm" target="_blank" rel="external">Android Application Architecture</a></li>
+</ol>
+<p><strong> 第181期 </strong></p>
+<ol>
+<li><a href="https://www.simform.com/blog/top-resources-to-learn-android" target="_blank" rel="external">Top resources to learn Android</a></li>
+</ol>
+<p><strong> 第179期 </strong></p>
+<ol>
+<li><a href="http://www.grokkingandroid.com/rxjavas-side-effect-methods/" target="_blank" rel="external">RxJava’s Side Effect Methods</a></li>
+</ol>
+<p><strong> 第178期 </strong></p>
+<ol>
+<li><a href="http://pguardiola.com/blog/clean-architecture-part-1/" target="_blank" rel="external">What is all this Clean Architecture jibber-jabber about? - Part 1</a>;</li>
+<li><a href="http://pguardiola.com/blog/clean-architecture-part-2/" target="_blank" rel="external">What is all this Clean Architecture jibber-jabber about? - Part 2</a>;</li>
+<li><a href="https://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank" rel="external">The Clean Architecture</a>.</li>
+</ol>
+<p><strong> 第177期 </strong></p>
+<ol>
+<li><a href="http://saulmm.github.io/mastering-coordinator/" target="_blank" rel="external">Mastering the Coordinator Layout</a>;</li>
+<li><a href="https://medium.com/@etiennelawlor/the-complete-guide-to-creating-an-android-library-46628b7fc879#.4jkgten5o" target="_blank" rel="external">The Complete Guide to Creating and Publishing an Android Library</a>;</li>
+<li><a href="https://medium.com/@bherbst/fragment-transitions-with-shared-elements-7c7d71d31cbb#.ssvqlcm43" target="_blank" rel="external">Fragment transitions with shared elements</a>;</li>
+<li><a href="https://yalantis.com/blog/video-recording-app-development-how-we-built-instagram-for-videos/" target="_blank" rel="external">Video Recording App Development: How We Built Instagram for Videos</a>;</li>
+<li><a href="https://github.com/PhilJay/MPAndroidChart" target="_blank" rel="external">MPAndroidChart (github.com)</a>.</li>
+</ol>
+<p><strong> 第174期 </strong></p>
+<ol>
+<li><a href="https://futurestud.io/blog/retrofit-2-upgrade-guide-from-1-9/" target="_blank" rel="external">Retrofit 2 — Upgrade Guide from 1.9</a>;</li>
+<li><a href="https://medium.com/@Macarse/lazy-loading-dex-files-d41f6f37df0e" target="_blank" rel="external">Lazy Loading Dex files</a>.</li>
+</ol>
+<p><strong> 第173期 </strong></p>
+<ol>
+<li><a href="https://code.facebook.com/posts/1480969635539475?refid=8&amp;_ft_=qid.6200742327944805904:mf_story_key.6249203789055394671:eligibleForSeeFirstBumping.1&amp;__tn__=H" target="_blank" rel="external">Optimizing Android bytecode with Redex</a>;</li>
+<li><a href="http://blog.tunebrains.com/2015/10/02/gradle-multi-flavors-signing.html" target="_blank" rel="external">Sign multiple flavors with different keystores</a>;</li>
+<li><a href="https://blog.stylingandroid.com/data-binding-part-1/" target="_blank" rel="external">Data Binding – Part 1</a>;</li>
+<li><a href="https://blog.stylingandroid.com/data-binding-part-2/" target="_blank" rel="external">Data Binding – Part 2</a>;</li>
+<li><a href="https://blog.stylingandroid.com/data-binding-part-3/" target="_blank" rel="external">Data Binding – Part 3</a>;</li>
+<li><a href="https://blog.stylingandroid.com/data-binding-part-4/" target="_blank" rel="external">Data Binding – Part 4</a>;</li>
+<li><a href="https://blog.stylingandroid.com/data-binding-part-5/" target="_blank" rel="external">Data Binding – Part 5</a>.</li>
+</ol>
+<p><strong> 第172期 </strong></p>
+<ol>
+<li><a href="http://blog.udinic.com/2015/09/15/speed-up-your-app" target="_blank" rel="external">Speed up your app</a>;</li>
+<li><a href="https://medium.com/ribot-labs/approaching-android-with-mvvm-8ceec02d5442" target="_blank" rel="external">Approaching Android with MVVM</a>;</li>
+<li><a href="https://medium.com/android-news/prefmatters-using-custom-views-in-android-to-improve-performance-part-1-4dc9bdd75396" target="_blank" rel="external">PerfMatters using custom Views in Android to improve performance — Part 1</a>;</li>
+<li><a href="https://medium.com/android-news/perfmatters-introduction-to-custom-viewgroups-to-improve-performance-part-2-f14fbcd47c" target="_blank" rel="external">PerfMatters introduction to custom ViewGroups to improve performance — Part 2</a>.</li>
+</ol>
+<p><strong> 第168期 </strong></p>
+<ol>
+<li><a href="https://speakerdeck.com/rock3r/tools-of-the-trade-droidcon-nyc-2015" target="_blank" rel="external">Tools of the Trade</a>;</li>
+<li><a href="https://speakerdeck.com/udinic/speed-up-your-app-droidcon-nyc-2015" target="_blank" rel="external">Speed up your app</a>;</li>
+<li><a href="http://www.slideshare.net/AnnyceDavis/develop-maintainable-apps-droidcon-2015" target="_blank" rel="external">Develop Maintainable Apps</a>;</li>
+<li><a href="https://medium.com/android-news/android-architecture-2f12e1c7d4db" target="_blank" rel="external">Android Architecture</a>;</li>
+<li><a href="https://speakerdeck.com/dlew/using-styles-and-themes-without-going-crazy-1" target="_blank" rel="external">Using styles and themes without going crazy</a>;</li>
+<li><a href="https://speakerdeck.com/jakewharton/simple-http-with-retrofit-2-droidcon-nyc-2015" target="_blank" rel="external">Simple HTTP with Retrofit 2</a>.</li>
+</ol>
+<p><strong> InfoQ 2015年9月30日 </strong></p>
+<ol>
+<li>AndFix：dexposed框架功能虽然强大，但是由于它的性能和兼容性（不支持ART），很多朋友都决定不再研究此框架。AndFix是一个Android App的在线热补丁框架。使用此框架，我们能够在不重复发版的情况下，在线修改App中的Bug。AndFix也就是 “Android Hot-Fix”的缩写。AndFix支持Android 2.3到6.0版本，并且支持ARM与X86系统架构的设备，完美支持Dalvik与ART的Runtime。</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/09/android-app-framework/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/11/screaming-architecture/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">令人尖叫的架构</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-weekly" data-title="Android Weekly 值得收藏的项" data-url="http://frodoking.github.io/2016/03/01/android-weekly/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

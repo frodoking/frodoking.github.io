@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
+categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frodo's Blog">
+<meta property="og:url" content="http://frodoking.github.io/2016/03/09/android-app-framework/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
+categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+<meta property="og:image" content="http://frodoking.github.io/img/App-Architecture.png">
+<meta property="og:updated_time" content="2016-01-04T07:17:50.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Frodo's Blog">
+<meta name="twitter:description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
+categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+<meta name="twitter:image" content="http://frodoking.github.io/img/App-Architecture.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-app-framework" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/09/android-app-framework/" class="article-date">
+  	<time datetime="2016-03-09T09:25:22.740Z" itemprop="datePublished">3月 9 2016</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: App项目架构解决方案<br>date: 2015-09-15 16:54:54<br>tags: [Android,Java]</p>
+<h2 id="categories-编程-架构"><a href="#categories-编程-架构" class="headerlink" title="categories: [编程,架构]"></a>categories: [编程,架构]</h2><p>App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。</p>
+<a id="more"></a>
+<p>项目主要包括两大部分</p>
+<h2 id="Framework层"><a href="#Framework层" class="headerlink" title="Framework层"></a>Framework层</h2><p>依托以java级别，主要提供底层API框架接口，提供一种编程思想同时从平台中剥离出来</p>
+<ol>
+<li>CacheSystem 缓存系统</li>
+<li>Configuration  基础应用配置</li>
+<li>Context 接管App层级上下文</li>
+<li>NetworkInteractor  网络模块，主要负责网络检测以及网络请求</li>
+<li>FileSystem  文件系统</li>
+<li>Database   数据库</li>
+<li>Theme   主题</li>
+<li>Scene   场景功能</li>
+<li>ModelFactory    业务工厂（实现IModel功能的所有业务操作类）</li>
+<li>PluginManager   插件化系统，主要对可扩展类的考虑。在一些特殊的系统中，可能存在ChildSystem级别的系统功能。需要继承PluginChildSystem来实现</li>
+<li>LogCollector    日志收集系统，针对所有日志做处理（开关，打印，本地保持，上传server等功能）</li>
+</ol>
+<h2 id="App层"><a href="#App层" class="headerlink" title="App层"></a>App层</h2><p>依赖于Framework Library。实现基于Android平台下的一系列接口</p>
+<ol>
+<li>主要接管Activity和Fragment中的架构，采用了MVVM的方式来解放UI(最近受到IOS的MVC架构所启发，Android的View概念被弱化，Activity和Fragment被强化导致很多同学认为这两者就是UI上的事情。其实不是这样，Fragment应该类似于IOS中的UIViewController才对。因此本框架通过UIView来强化Android的UI概念。用Fragment来做为UIViewController。)</li>
+<li>App全局只有一个入口启动MainActivity同时也是唯一的一个Activity。MainActivity继承了FragmentContainerActivity，因此他是Fragment容器</li>
+<li>所有页面都是Fragment实现，包括启动页面。主要利用support.v4包的FragmentManager来管理整个Fragment堆栈实现页面切换功能</li>
+<li>页面请求都采用线程池执行Task的方式来完成，回调使用了Rxjava的订阅/消费的观察者模式完成</li>
+</ol>
+<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><p><img src="http://frodoking.github.io/img/App-Architecture.png" alt="架构图"></p>
+<h2 id="Simple工程"><a href="#Simple工程" class="headerlink" title="Simple工程"></a>Simple工程</h2><ol>
+<li>simplecloudentity是服务器定义的基础数据结构</li>
+<li>simpleentity是本地App需要的数据结构。这样定义的目的是为了App数据结构的组织不完全依赖Server</li>
+<li>Simple工程数据主要参考<a href="https://github.com/OpenSource-Frodo/philm" target="_blank" rel="external">philm</a>工程</li>
+</ol>
+<h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><p>由于整个工程项目开发是一个很耗时的迭代过程，所以有考虑不全面的地方希望引用同学继续补充(贡献分支<a href="https://github.com/frodoking/GradleAndroid-App-Framework/tree/branch_contributors" target="_blank" rel="external">branch_contributors</a>)。在补充过程中尽量通知到作者本人。希望有兴趣的同学加入进来，把这个工程完善得更好。</p>
+<p><strong>依赖注入和事件总线思想在本项目里是排斥的，原因很简单，不仅仅从性能方面的考虑,同时：</strong></p>
+<ol>
+<li>依赖让代码指向混乱同时也给开发者造成结构的不清晰</li>
+<li>事件总线思想很容易造成滥用的现象，就像广播一样，没有目的的注册和广播很容易导致内存泄露发生</li>
+</ol>
+<h2 id="第三方依赖"><a href="#第三方依赖" class="headerlink" title="第三方依赖"></a>第三方依赖</h2><ol>
+<li>基础库guava</li>
+<li>网络库okhttp、retrofit</li>
+<li>图片库picasso（后期考虑glide）</li>
+<li>事件传递机制的Rxjava</li>
+<li>内存泄露检测库leakcanary</li>
+</ol>
+<h2 id="关于作者-frodoking"><a href="#关于作者-frodoking" class="headerlink" title="关于作者(frodoking)"></a>关于作者(frodoking)</h2><ul>
+<li>Email: awangyun8@gmail.com</li>
+<li>个人技术Blog：<a href="http://frodoking.github.io/">http://frodoking.github.io/</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/09/android-glide/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/01/android-weekly/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android Weekly 值得收藏的项</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-app-framework" data-title="" data-url="http://frodoking.github.io/2016/03/09/android-app-framework/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

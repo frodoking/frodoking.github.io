@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>ReactiveX--响应式编程 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在许多软件编程任务中，你或多或少期待你的指令将会按照你已经写好的顺序，依次增量执行和完成。但在ReactiveX，很多指令可以通过“观察者”并行执行，其结果将以任意顺序被捕获。你定义了一种“可观察的形式“的检索和转换数据机制而不​​是调用方法，然后订阅观察者给它，每当之前定义好的机制已经准备好了，这些机制就会触发常设的哨兵去捕获并反馈结果。
+这种方法的优点是，当你有一大堆的任务是不相互依赖，你就可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactiveX--响应式编程">
+<meta property="og:url" content="http://frodoking.github.io/2015/09/08/reactivex/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="在许多软件编程任务中，你或多或少期待你的指令将会按照你已经写好的顺序，依次增量执行和完成。但在ReactiveX，很多指令可以通过“观察者”并行执行，其结果将以任意顺序被捕获。你定义了一种“可观察的形式“的检索和转换数据机制而不​​是调用方法，然后订阅观察者给它，每当之前定义好的机制已经准备好了，这些机制就会触发常设的哨兵去捕获并反馈结果。
+这种方法的优点是，当你有一大堆的任务是不相互依赖，你就可">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/Observable.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.AsyncSubject.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.AsyncSubject.e.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.BehaviorSubject.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.BehaviorSubject.e.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.PublishSubject.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.PublishSubject.e.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/S.ReplaySubject.png">
+<meta property="og:image" content="http://frodoking.github.io/img/rxjava/usecase/schedulers.png">
+<meta property="og:updated_time" content="2015-09-14T04:14:02.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactiveX--响应式编程">
+<meta name="twitter:description" content="在许多软件编程任务中，你或多或少期待你的指令将会按照你已经写好的顺序，依次增量执行和完成。但在ReactiveX，很多指令可以通过“观察者”并行执行，其结果将以任意顺序被捕获。你定义了一种“可观察的形式“的检索和转换数据机制而不​​是调用方法，然后订阅观察者给它，每当之前定义好的机制已经准备好了，这些机制就会触发常设的哨兵去捕获并反馈结果。
+这种方法的优点是，当你有一大堆的任务是不相互依赖，你就可">
+<meta name="twitter:image" content="http://frodoking.github.io/img/rxjava/usecase/Observable.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-reactivex" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/08/reactivex/" class="article-date">
+  	<time datetime="2015-09-08T06:47:15.000Z" itemprop="datePublished">9月 8 2015</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ReactiveX--响应式编程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/architecture/">架构</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在许多软件编程任务中，你或多或少期待你的指令将会按照你已经写好的顺序，依次增量执行和完成。但在ReactiveX，很多指令可以通过“观察者”并行执行，其结果将以任意顺序被捕获。你定义了一种“可观察的形式“的检索和转换数据机制而不​​是调用方法，然后订阅观察者给它，每当之前定义好的机制已经准备好了，这些机制就会触发常设的哨兵去捕获并反馈结果。</p>
+<p>这种方法的优点是，当你有一大堆的任务是不相互依赖，你就可以同时执行他们，而不是等待每一个来启动下一个前完成，这样你的整个任务包只需要花最长的任务时间。</p>
+<p>有很多属于来描述异步编程和设计模型。本文将使用下列术语：一个观察者（observer）订阅可观察到的（Observable）。可观察到的（Observable）通过调用观察者的方法来发射项目或通知给它的所有观察者（observer）。</p>
+<p>观察者有些时候也被称作是订阅者，观看者，响应者。因此这样的模式通常就叫做响应模式。</p>
+<p>在很多存在UI操作的地方，UI上的操作不应该等待耗时执行程序的完成而阻塞。在一般编程模式下，都会采用异步线程+回调的方式完成这样的交互操作。不过当回调层次越来越多的时候，那代码可维护性将变得很麻烦。因此ReactiveX最出色的地方就是将多个操作过程按照自定义顺序组合完成最终结果，在每次一的操作中只需要关心业务逻辑本身的执行即可。<br><a id="more"></a><br>这些话描述起来比较生硬，一些简单的使用介绍可以见如下站点：</p>
+<blockquote>
+<ul>
+<li><a href="http://blog.csdn.net/lzyzsd/article/details/41833541" target="_blank" rel="external">深入浅出RxJava 一、基础篇</a>;</li>
+<li><a href="http://blog.csdn.net/lzyzsd/article/details/44094895" target="_blank" rel="external">深入浅出RxJava 二、操作符</a>;</li>
+<li><a href="http://blog.csdn.net/lzyzsd/article/details/44891933" target="_blank" rel="external">深入浅出RxJava 三、响应式的好处</a>;</li>
+<li><a href="http://blog.csdn.net/lzyzsd/article/details/45033611" target="_blank" rel="external">深入浅出RxJava 四、在Android中使用响应式编程</a>;</li>
+</ul>
+</blockquote>
+<p>本文主要针对实现过程做梳理和剖析，因此基础部分不在做过多阐述。</p>
+<p>OK，接下来讲讲ReactiveX中几个比较重要的概念</p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p><strong><center>Observable 可观察的对象</center></strong></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p>在ReactiveX中，一个观察者observer订阅到一个可观察的对象Observable。无论是某一个还是多个Observable执行，这些观察者都会做出响应。这样的模式有利于并发操作，因为这样不需要去等待Observable去广播，但是它创建了一个观察者形式的哨兵，此哨兵在今后的任何时间里随时准备做适当的响应，Observable也会做出这样的响应。</p>
+<p>下面这这张图很好的说明了什么是Observables和observers，以及他们之间的转换关系<br><img src="http://frodoking.github.io/img/rxjava/usecase/Observable.png" alt="Observables与Observables转换图"></p>
+<p><strong>关于Observers的创建</strong><br>下面是采用了伪代码来展示Observers的实现过程：</p>
+<ul>
+<li>同步方式：</li>
+</ul>
+<ol>
+<li>调用一个方法</li>
+<li>用一个变量存储方法返回值</li>
+<li>使用这个变量作为一个新的值做其他事情</li>
+</ol>
+<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 写一个回调方法，并且指定到 `returnVal`</span><br><span class="line">returnVal = someMethod(itsParameters);</span><br><span class="line">// 使用returnVal做新的事情</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>异步方式：</li>
+</ul>
+<ol>
+<li>定义一个方法，此方法是做一些事情并带有来之于异步调用的返回值；这个方法也是observer的一部分</li>
+<li>定义异步调用自身作为一个Observable</li>
+<li>通过订阅的方式连接observer到Observable（这个过程也是初始化Observable的actions）</li>
+<li>执行你的业务；每当调用返回，observer的方法将会操作它自身返回值，这里的返回值是通过Observable广播</li>
+</ol>
+<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 定义但是不执行, 订阅者的onNext方法</span><br><span class="line">// (这个例子中observer只有一个onNext方法)</span><br><span class="line">def myOnNext = &#123; it -&gt; do something useful with it &#125;;</span><br><span class="line">// 定义但是不执行的Observable</span><br><span class="line">def myObservable = someObservable(itsParameters);</span><br><span class="line">// 发起订阅并执行</span><br><span class="line">myObservable.subscribe(myOnNext);</span><br><span class="line">// 继续执行相应的业务逻辑</span><br></pre></td></tr></table></figure></p>
+<p><strong>onNext, onCompleted, and onError</strong><br>订阅方法就是展示了observer如何连接到Observable。oberver实现了下列方法的一些子集：</p>
+<ul>
+<li>onNext<br>每当Observable广播数据时将会调用该方法。这个方法将会被作为Observable的一个广播项目参数被发送</li>
+<li>onError<br>Observable调用此方法表示它内部已经发生异常数据或者发生一些其他错误。这样停止观察，并且也不会做将来的调用onNext或者onCompleted。该onError方法作为它的参数来指示了错误的原因。</li>
+<li>onCompleted<br>Observable在已经调用了onNext方法作为最后的时间，如果没有遇到任何错误，那么该方法将会被调用</li>
+</ul>
+<p>通过Observable的定义，它可能调用onNext零次或者很多次，并且接下来的调用可能是onCompleted或者onError方法，但是不是同时调用，这都是最终才会被调用。在调用过程中，onNext通常称作任务的执行，而onCompleted或者onError被称作任务的结果通知</p>
+<p>下面是一个subscribe调用例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def myOnNext     = &#123; item -&gt; /* 任务执行 */ &#125;;</span><br><span class="line">def myError      = &#123; throwable -&gt; /* 失败时的响应 */ &#125;;</span><br><span class="line">def myComplete   = &#123; /* 成功后的响应 */ &#125;;</span><br><span class="line">def myObservable = someMethod(itsParameters);</span><br><span class="line">myObservable.subscribe(myOnNext, myError, myComplete);</span><br><span class="line">// 继续执行相应的业务逻辑</span><br></pre></td></tr></table></figure></p>
+<p>更多相关信息也可以参考</p>
+<ul>
+<li><a href="http://www.introtorx.com/Content/v1.0.10621.0/02_KeyTypes.html#IObserver" target="_blank" rel="external">Introduction to Rx: IObserver</a></li>
+</ul>
+<p><strong>Unsubscribing取消订阅</strong><br>在ReactiveX实现中，有一个特殊的observer接口是Subscriber，这个接口中有一个unsubscribe方法。当你调用此方法，表示订阅者不在对当前任何被订阅的Observables。如果没有其他observer，那么当前的Observables就会选择停止对新数据的广播。</p>
+<p>退订结果将会通过应用于哪些之前观察者订阅了的Observable的操作连来联级返回。这个操作将会导致整个连接链上的每一个环节都停止发送动作。这个过程虽然不能保证立即发生，但是，在没有观察者仍然观察这些回调数据的时候，Observable是有可能试图去发送或者广播数据的。</p>
+<p><strong>Observables的“冷”与“热”</strong><br>Observable具体在什么时候发送他的数据队列？这依赖于Observable。一个“热”的Observable可能随着它的创建就会立即发送回调数据，哪些之后订阅到Observable的任何observer也可以立即发起对观察队列的监听。另一方面，一个“冷”Observable就会等待，直到一个观察者observer订阅它之前开始发送动作，所以这样就能保证观察者从一开始就能看到整个序列。</p>
+<p><strong>Composition</strong><br>Observables和observers只是ReactiveX的一个开始。通过对标准的观察者模式的稍微扩展，更好的去处理了事件序列，而不是单个回调。<br>真正的核心就是“无扩展”，操作符允许你去转换，合并，操作以及同发送序列被Observables一起发送。也就是说操作符和操作结果都是可发送，可传递的。<br>ReactiveX的操作符允许你以声明的方式一起构成异步序列，同时还保持着回调函数的高效率, 但没有嵌套的回调处理程序通常与异步系统相关的问题。</p>
+<p>这里罗列一下Observable中定义的一些主要功能点：</p>
+<ol>
+<li>Observable的创建<br>Create, Defer, Empty/Never/Throw, From, Interval, Just, Range, Repeat, Start, and Timer</li>
+<li>Observable发送项目的转换<br>Buffer, FlatMap, GroupBy, Map, Scan, and Window</li>
+<li>Observable过滤<br>Debounce, Distinct, ElementAt, Filter, First, IgnoreElements, Last, Sample, Skip, SkipLast, Take, and TakeLast</li>
+<li>Observable合并<br>And/Then/When, CombineLatest, Join, Merge, StartWith, Switch, and Zip</li>
+<li>错误处理操作符<br>Catch and Retry</li>
+<li>实用工具操作符<br>Delay, Do, Materialize/Dematerialize, ObserveOn, Serialize, Subscribe, SubscribeOn, TimeInterval, Timeout, Timestamp, and Using</li>
+<li>条件和布尔运算符<br>All, Amb, Contains, DefaultIfEmpty, SequenceEqual, SkipUntil, SkipWhile, TakeUntil, and TakeWhile</li>
+<li>数学和聚集操作符<br>Average, Concat, Count, Max, Min, Reduce, and Sum</li>
+<li>转换操作符<br>To</li>
+<li>可连接到Observable的操作符<br>Connect, Publish, RefCount, and Replay</li>
+</ol>
+<p>下面来详细说一下ReactiveX的操作符知识 </p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p><strong><center>Operators 操作符</center></strong></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p>ReactiveX有一些列的操作集合，但是在不同的语言上表现都是大相径庭的。在一些特殊的语言可能还会有特定的定义操作符。</p>
+<p><strong> 链式操作符 </strong><br>大多数操作符操作一个Observable并且返回一个Observable。这样允许开发人员以一个链式的方式一个接一个的执行操作符。在可修改的链式中每一个操作结果Observable都是来之于上一个操作，这里的操作也就是定义的operator。<br>这里有一些类似于构造器Builder模式，该模式描述了一个含有一系方法的特定类通过操作方法来操作具有相同功能的类的每一项。这个模式也允许你以类似的方式去链式操作方法。在Builder模式中，操作方法出现的顺序在链式中可能不是那么重要，但是在Observable中的操作符顺序就很重要。</p>
+<p>Observable操作符链不会依赖于原来的Observable去操作原始的链，但他们会反过来操作，每一个在Observable上的正在操作的operator都是上一个操作立即产生的。</p>
+<p>我们也可以自己选择自定义操作符，具体如何实现可以参考<a href="http://reactivex.io/documentation/implement-operator.html" target="_blank" rel="external">Implementing Your Own Operators</a>。</p>
+<p>上面在Observable中罗列过简单的功能点，下面罗列一下按照类别划分的操作符以及各自的功能：</p>
+<p><strong> 创建Observables </strong><br>创建新的Observables的操作符</p>
+<blockquote>
+<ul>
+<li>Create——通过调用observer方法编程从头创建一个Observable</li>
+<li>Defer——不立即创建Observable，直到observer触发订阅动作。此方法为每一个observer创建一个新的Observable</li>
+<li>Empty/Never/Throw——为非常精确和有限的行为创建Observables</li>
+<li>From——将其他对象或数据结构转换成一个Observable</li>
+<li>Interval——创建一个具有发出一个整数序列间隔为一个特定的时间间隔的Observable</li>
+<li>Just——把一个对象或一组对象转换成一个Observable，同时该Observable发送这样的对象</li>
+<li>Range——创建一个Observable,发送一系列连续的整数</li>
+<li>Repeat——创建一个Observable,发送一个特定的项目或项目重复序列</li>
+<li>Start——创建一个Observable,发送一个函数的返回值</li>
+<li>Timer——创建一个Observable,在一个给定的一段时间延迟后发送一个对象或者项目</li>
+</ul>
+</blockquote>
+<p><strong> 转换Observables </strong><br>转换被一个Observable发送的项目的操作符</p>
+<blockquote>
+<ul>
+<li>Buffer——定期收集从Observable中发出的数据到集合中，并且发送这些集合而不是发送一次</li>
+<li>FlatMap——将一个Observable发送的数据或者项目转换到Observables中，然后把这些数据压缩成一个单个的Observable</li>
+<li>GroupBy——拆分一个Observable成多个Observable组，并且每个组发送的数据会租床成一个不同的发送数据组，当然这些发送数据时来至于原始的Observable。这些分组都是通过划分key来实现</li>
+<li>Map——转换一个Observable发送的每个数据或者项目映射到一个函数上</li>
+<li>Scan——应用一个函数给一个Observable发送出来的每一想数据,并且是按照顺序发送每个连续值</li>
+<li>Window——定期细分条目从一个Observable到Observable的windows，并且发送结果是这些windows而不是一次发送原始的数据或者项目</li>
+</ul>
+</blockquote>
+<p><strong> 过滤Observables </strong><br>过滤被Observable发送的项目的操作符</p>
+<blockquote>
+<ul>
+<li>Debounce——如果Observable在一个特定时间间隔过去后没有发送其他数据或者项目,那么它只发送一个数据或者项目</li>
+<li>Distinct——该Observable不可以发送重复的数据</li>
+<li>ElementAt——只发送被Observable发送的某一个元素</li>
+<li>Filter——一个Observable只发送通过来特定测试描述语的匹配项</li>
+<li>First——只发出第一项,或第一项符合条件的项</li>
+<li>IgnoreElements——不发送任何数据，但是必须反馈它的中断通知</li>
+<li>Last——只发送最后一项</li>
+<li>Sample——发出Observables周期时间间隔内最新的项</li>
+<li>Skip——跳过发送前几项</li>
+<li>SkipLast——跳过发送后几项</li>
+<li>Take——仅仅发送前几项</li>
+<li>TakeLast——仅仅发送后几项</li>
+</ul>
+</blockquote>
+<p><strong> 合并Observables </strong><br>将多个Observables合并成单个的Observable的操作符</p>
+<blockquote>
+<ul>
+<li>And/Then/When——通过Pattern和Plan媒介将两个或者多个Observables发送的数据或项目合并成集合</li>
+<li>CombineLatest——当某一项数据由两个Observables发送时，通过一个特殊的函数来合并每一个Observable发送的项，并且最终发送数据是该函数的结果</li>
+<li>Join——合并两个Observables发送的结果数据。其中两个Observable的结果遵循如下规则：每当一个Observable在定义的数据窗口中发送一个数据都是依据另外一个Observable发送的数据。</li>
+<li>Merge——通过合并多个Observables发送的结果数据将多个Observables合并成一个</li>
+<li>StartWith——在Observable源开始发送数据项目之前发送一个指定的项目序列</li>
+<li>Switch——转换一个Observable，并且发送Observables到一个单个Observable，这个单个的Observable发送的项目就是转换之前的Observables最近发送的项目</li>
+<li>Zip——通过特定的函数合并多个Observable的结果，并且对于每个组合都发出单独的项目数据，这些数据就是之前定义的合并函数</li>
+</ul>
+</blockquote>
+<p><strong> 错误处理操作符 </strong><br>错误处理操作符主要用于帮助来之于一个Observable里的错误通知的恢复功能</p>
+<blockquote>
+<ul>
+<li>Catch——从OnError方法通知中恢复持续的没有错误的序列</li>
+<li>Retry——如果一个源Observable发送一个onError通知，重新订阅给它，希望它将没有错误的执行完成</li>
+</ul>
+</blockquote>
+<p><strong> 实用工具操作符 </strong><br>一个实用的操作符工具箱</p>
+<blockquote>
+<ul>
+<li>Delay——按照一个特定量及时的将Observable发送的结果数据向前推移</li>
+<li>Do——注册一个事件去监听Observable生命周期</li>
+<li>Materialize/Dematerialize——代表发送出来的项目数据或者通知，或相反过程</li>
+<li>ObserveOn——指定一个observer将会观察这个Observable的调度</li>
+<li>Serialize——强制一个Observable去做序列化调用</li>
+<li>Subscribe——操作可观测的排放和通知</li>
+<li>SubscribeOn——指定一个Observable在被订阅的时候应该使用的调度</li>
+<li>TimeInterval——转换一个Observable的发送项目到另一个项目，在这些发送项之间，此项目具有指示这些发送的时间开销功能</li>
+<li>Timeout——镜像源Observable,但如果某段时间过后没有任何通知发出将会发出一个错误通知</li>
+<li>Timestamp——给一个Observable发送的每一个项目附加一个时间戳</li>
+<li>Using——创建一个一次性的资源，这个资源就像Observable一样有相同的寿命</li>
+</ul>
+</blockquote>
+<p><strong> 条件和布尔运算操作符 </strong><br>评估一个或者多个Observables或者被Observables发送的项目的操作符</p>
+<blockquote>
+<ul>
+<li>All——确定发出的所有项目满足某些标准</li>
+<li>Amb——给定两个或两个以上的Observable来源,从只有第一个可见发出一个项目发送所有的项目数据</li>
+<li>Contains——决定是否Observable发出一个特定的项</li>
+<li>DefaultIfEmpty——发送项从Observable源，或者如果Observable源没有任何发送内容，那么将会发送一个默认的项</li>
+<li>SequenceEqual——确定两个Observables发出相同的序列条目</li>
+<li>SkipUntil——丢弃Observable发出的项,直到第二个Observable发出一项</li>
+<li>SkipWhile——丢弃Observable发出的项,直到指定的条件变成了false</li>
+<li>TakeUntil——在第二个Observable发送一项或者终止之后，丢弃Observable发出的项</li>
+<li>TakeWhile——在指定的条件变成了false之后，丢弃Observable发出的项</li>
+</ul>
+</blockquote>
+<p><strong> 数学和聚集操作符 </strong></p>
+<blockquote>
+<ul>
+<li>操作一个被Observable发送出来的一整个项目序列操作符</li>
+<li>Average——计算一个Observable发送所有结果的平均值，并且发送这个值</li>
+<li>Concat——发送两个或两个以上Observables没有交叉的值</li>
+<li>Count——计算Observable源发出的项目数据数量,只发出这个值</li>
+<li>Max——确定,发送最大值项</li>
+<li>Min——确定,发送最小值项</li>
+<li>Reduce——应用一个函数给一个Observable发送的项，并且发送该函数的结果</li>
+<li>Sum——计算Observable发送的所有数据的求和，并且发送这个求和结果</li>
+</ul>
+</blockquote>
+<p><strong> 转换操作符 </strong></p>
+<blockquote>
+<ul>
+<li>To——将一个Observable转换到另一个对象或数据结构</li>
+</ul>
+</blockquote>
+<p><strong> 可连接到Observable的操作符 </strong><br>指定Observables有更多精确控制订阅动态的操作符</p>
+<blockquote>
+<ul>
+<li>Connect——定义一个可连接的Observable发送项目数据给它的订阅者</li>
+<li>Publish——把一个普通的Observable转化为一个可连接的Observable（向下转换）</li>
+<li>RefCount——把一个可连接的Observable转化成一个看起来就行一个普通的Observable（向上转换）</li>
+<li>Replay——确保所有的Observables能看到所有发送的相同的项目数据序列，及时是在Observable已经开始发送后才订阅的</li>
+</ul>
+</blockquote>
+<hr style="border:1px dashed gray; height:1px">
+
+<p><strong><center>Single</center></strong></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p>由于Single是Observable的一个衍生变体，因此这里就不再做介绍。有兴趣的同学可以查看<a href="http://reactivex.io/documentation/single.html" target="_blank" rel="external">ReactiveX–Single文档</a></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p><strong><center>Subject</center></strong></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p>一个Subject是一种桥梁或者也可以叫做代理，一个Subject在ReactiveX的实现中既是一个observer也是一个Observable。因为它本身是一个observer，它能订阅到一个或者多个Observables中，同时它也是一个Observable，他通过重新发送项目数据，能遍历它所有的observers，同时，它也能发送新的项目数据。<br>因为一个Subject订阅到一个Observable时，这将会触发Observable开始发送他的项目数据（当然这里的操作必须是定义Observable为“冷的”）。</p>
+<p>这里还有一些其他介绍可以参考：</p>
+<blockquote>
+<ul>
+<li><a href="http://davesexton.com/blog/post/To-Use-Subject-Or-Not-To-Use-Subject.aspx" target="_blank" rel="external">To Use or Not to Use Subject</a> from Dave Sexton’s blog</li>
+<li><a href="http://www.introtorx.com/Content/v1.0.10621.0/02_KeyTypes.html#Subject" target="_blank" rel="external">Introduction to Rx: Subject</a></li>
+<li><a href="http://rxwiki.wikidot.com/101samples#toc44" target="_blank" rel="external">101 Rx Samples: ISubject<t> and ISubject<t1,t2></t1,t2></t></a></li>
+<li><a href="http://akarnokd.blogspot.hu/2015/06/subjects-part-1.html" target="_blank" rel="external">Advanced RxJava: Subject</a> by Dávid Karnok</li>
+<li><a href="http://xgrommx.github.io/rx-book/content/getting_started_with_rxjs/subjects.html" target="_blank" rel="external">Using Subjects</a> by Dennis Stoyanov</li>
+</ul>
+</blockquote>
+<p><strong> 各种不同的Subject类型 </strong><br>这里有四种不同类型的Subject来满足于特定的使用场景。 <strong><font color="#FF0000" size="3">注意：<u>下面的示例图中每一条带有向右箭头横线都是一个单向过程，蓝色的subscribe()方法表示每一次订阅触发执行函数。每一次的订阅触发即图中蓝色箭头</u>。</font> </strong>  </p>
+<p><strong> AsyncSubject </strong><br><img src="http://frodoking.github.io/img/rxjava/usecase/S.AsyncSubject.png" alt="AsyncSubject执行流程图"><br>只有在源Observable完成之后，一个AsyncSubject将会发送由源Observable发送的最后一个值。（如果源Observable并没有发送任何值，那么AsyncSubject在完成的时候也不会发送任何值）<br><img src="http://frodoking.github.io/img/rxjava/usecase/S.AsyncSubject.e.png" alt="AsyncSubject执行中断流程图"><br>AsyncSubject将会发送相同的最终值给接下来的observers。但是，如果源Observable因为错误而中断，AsyncSubject并不会发送任何值，但是会传递来之于源Observable的错误通知。</p>
+<p>通俗的来讲，异步的Subject在每次触发subscribe()方法发送项目的时候，只有在源Observable结束后才会发送源发送的结果。</p>
+<p>更详细介绍参考</p>
+<blockquote>
+<ul>
+<li><a href="http://www.introtorx.com/Content/v1.0.10621.0/02_KeyTypes.html#AsyncSubject" target="_blank" rel="external">Introduction to Rx: AsyncSubject</a></li>
+</ul>
+</blockquote>
+<p><strong> BehaviorSubject </strong><br><img src="http://frodoking.github.io/img/rxjava/usecase/S.BehaviorSubject.png" alt="BehaviorSubject执行流程图"><br>当一个observer订阅到一个BehaviorSubject上时，通过发送当源Observable发送的最近项目数据，这个observer将会被触发执行。并且它会继续发送源Observable后续发送的项。<br><img src="http://frodoking.github.io/img/rxjava/usecase/S.BehaviorSubject.e.png" alt="BehaviorSubject执行中断流程图"><br>但是，如果源Observable发生错误而中断，BehaviorSubject将不会发送任何数据给随后的observers。不过，来之于源Observable的错误通知任然会传递。</p>
+<p>更详细介绍参考</p>
+<blockquote>
+<ul>
+<li><a href="http://www.introtorx.com/Content/v1.0.10621.0/02_KeyTypes.html#BehaviorSubject" target="_blank" rel="external">Introduction to Rx: BehaviorSubject</a></li>
+</ul>
+</blockquote>
+<p><strong> PublishSubject </strong><br><img src="http://frodoking.github.io/img/rxjava/usecase/S.PublishSubject.png" alt="PublishSubject执行流程图"><br>PublishSubject的主要职责就是将源Observable发送的所有数据发送给随后一个已经订阅了的observer。<br>值得注意的就是，一个PublishSubject可能在创建的时候立即发送项目数据，不过在Subject的创建和observer订阅到这个Subject的这段时间中，一个或者多个发送项目数据可能存在丢失的风险。如果你要确保传送所有的源Observable发送项，你可以使用Observable的Create方式来构建，以便你能手动重新构建“冷的”Observable行为。或者你也可以使用ReplaySubject。<br><img src="http://frodoking.github.io/img/rxjava/usecase/S.PublishSubject.e.png" alt="PublishSubject执行中断流程图"><br>如果源Observable发生错误而中断，PublishSubject将不会发送任何项给接下来的observer。不过，来之于源Observable的错误通知任然会传递。</p>
+<p><strong> ReplaySubject </strong><br><img src="http://frodoking.github.io/img/rxjava/usecase/S.ReplaySubject.png" alt="ReplaySubject执行流程图"><br>ReplaySubject发送过去源Observable发送的所有项目数据给任意的observer，不管observer在什么时候订阅。<br>一旦replay缓冲项逐渐增长超过了一个固定值后，ReplaySubject将会丢弃旧的项。或者给已经发送的数据指定一个有效时间，在失效过后就会扔掉。<br>如果你使用ReplaySubject作为一个observer，必须确保不会再多线程中调用onNext方法，因为这可能导致乱序调用，这是违反了Observable定义规则的。并且会创建一个有歧义的Subject去replay。<br>更详细介绍参考</p>
+<blockquote>
+<ul>
+<li><a href="http://www.introtorx.com/Content/v1.0.10621.0/02_KeyTypes.html#ReplaySubject" target="_blank" rel="external">Introduction to Rx: ReplaySubject</a></li>
+</ul>
+</blockquote>
+<hr style="border:1px dashed gray; height:1px">
+
+<p><strong><center>Scheduler 调度</center></strong></p>
+<hr style="border:1px dashed gray; height:1px">
+
+<p>如果你想在多线程中使用Observable的联级操作链，你可以在特殊的Schedulers上去制定这些操作链去操作。<br>在ReactiveX中Observable操作符将Scheduler作为一个变量，这些操作在一个特定的Scheduler上做一些操作或者所有的工作。<br>默认情况下，你应用操作链到Observable上做一些事情的时候，这将会通知它的observers，在同一个线程中它的Subscribe方法将会被调起。根据Observable应有的操作，定义一个不同的Scheduler，SubscribeOn操作就会改变这些行为。ObserveOn操作指定一个不同的Scheduler，这个Scheduler主要用于Observable去发送通知给它自身的observers上。<br>如下图所示，SubscribeOn操作指派哪一个Observable线程将会开始操作，操作链中的所有操作都可以被调起。另一方面，在操作出现的地方，ObserveOn会影响下面的Observable将使用的线程。对于这样的原因，在Observable操作链中，你可以在多个点多次调用ObserveOn方法，这样来确保多线程上的这些操作的执行。<br><img src="http://frodoking.github.io/img/rxjava/usecase/schedulers.png" alt="Scheduler执行流程图"></p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>由于这篇文章大部分来至ReactiveX原始文档，加上一些的个人理解形成。有一些翻译或者个人理解会有一定的偏差，再后续会继续修正。如果阅读到这篇文章的同学发现有不妥当的地方，还请回复指出，谢谢。</p>
+<p>另外，后面有时间打算针对Rxjava做一下源码上的分析。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/11/11/screaming-architecture/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          令人尖叫的架构
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/07/19/java-concurrent-mechanism/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java并发控制机制</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="reactivex" data-title="ReactiveX--响应式编程" data-url="http://frodoking.github.io/2015/09/08/reactivex/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

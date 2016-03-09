@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>OKHttp源码解析-ConnectionPool对Connection重用机制&amp;Http/Https/SPDY协议选择 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="因文章很快被人转载到一些其他网站，所以本人在此声明：转载请标明转载出处：http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/ 
+距离上一次的OKHttp源码解析过去快3月了。最近一直在忙工作上的事情，另外也再尝试一门新的语言Go。所以一直没花很多心思在Android这边。最近看到一些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OKHttp源码解析-ConnectionPool对Connection重用机制&Http/Https/SPDY协议选择">
+<meta property="og:url" content="http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="因文章很快被人转载到一些其他网站，所以本人在此声明：转载请标明转载出处：http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/ 
+距离上一次的OKHttp源码解析过去快3月了。最近一直在忙工作上的事情，另外也再尝试一门新的语言Go。所以一直没花很多心思在Android这边。最近看到一些">
+<meta property="og:updated_time" content="2015-09-14T06:45:52.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OKHttp源码解析-ConnectionPool对Connection重用机制&Http/Https/SPDY协议选择">
+<meta name="twitter:description" content="因文章很快被人转载到一些其他网站，所以本人在此声明：转载请标明转载出处：http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/ 
+距离上一次的OKHttp源码解析过去快3月了。最近一直在忙工作上的事情，另外也再尝试一门新的语言Go。所以一直没花很多心思在Android这边。最近看到一些">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-okhttp-connectionpool-http1-x-http2-x" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/" class="article-date">
+  	<time datetime="2015-06-29T03:08:46.000Z" itemprop="datePublished">6月 29 2015</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OKHttp源码解析-ConnectionPool对Connection重用机制&amp;Http/Https/SPDY协议选择
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>因文章很快被人转载到一些其他网站，所以本人在此声明：<br><strong>转载请标明转载出处：<a href="http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/">http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/</a> </strong></p>
+<p>距离上一次的<a href="/2015/03/12/android-okhttp/">OKHttp源码解析</a>过去快3月了。最近一直在忙工作上的事情，另外也再尝试一门新的语言Go。所以一直没花很多心思在Android这边。最近看到一些网友建议把okhttp的连接池对Connection的重用维护机制以及HTTP和SPDY协议如何得到区分这两个核心内容做深入的分析。<br>因此，这几天就打算好好说一说这块儿的实现方式。SPDY既是http1.x的增强版也是http2.x的过渡版本，虽然现在很多都直接切入到http2.0，不过SPDY的应用仍然值得关注。<br><a id="more"></a></p>
+<h2 id="ConnectionPool对Connection的重用机制"><a href="#ConnectionPool对Connection的重用机制" class="headerlink" title="ConnectionPool对Connection的重用机制"></a>ConnectionPool对Connection的重用机制</h2><p>从上一篇文章的HttpEngine.connect()说起，在这个方法中有connection = nextConnection();这是Connection创建或者重用的起点。那我们先来看看nextConnection()方法：</p>
+<p><strong>HttpEngine.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public final class HttpEngine &#123;</span><br><span class="line">	// ...省略.....</span><br><span class="line">	/**</span><br><span class="line">     * Returns the next connection to attempt.</span><br><span class="line">     *</span><br><span class="line">     * @throws java.util.NoSuchElementException if there are no more routes to attempt.</span><br><span class="line">     */</span><br><span class="line">    private Connection nextConnection() throws IOException &#123;</span><br><span class="line">        Connection connection = createNextConnection();</span><br><span class="line">        Internal.instance.connectAndSetOwner(client, connection, this, networkRequest);</span><br><span class="line">        return connection;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Connection createNextConnection() throws IOException &#123;</span><br><span class="line">        ConnectionPool pool = client.getConnectionPool();</span><br><span class="line"></span><br><span class="line">        // Always prefer pooled connections over new connections.</span><br><span class="line">		// 这里表示先从连接池中选拔一个已经缓存过的Connection</span><br><span class="line">		// 先通过连接池内部的get方法获取（下面代码再展开）</span><br><span class="line">        for (Connection pooled; (pooled = pool.get(address)) != null; ) &#123;</span><br><span class="line">            // 匹配GET方法，判断当前命中的Connection是否是可读取的，这里SPDY类型连接默认是true，</span><br><span class="line">			// 而http1.x通过判断socket是否已经关闭来作为是否可读取判断依据</span><br><span class="line">			if (networkRequest.method().equals(&quot;GET&quot;) || Internal.instance.isReadable(pooled)) &#123;</span><br><span class="line">                return pooled;</span><br><span class="line">            &#125;</span><br><span class="line">			// 如果不满足可循环使用，当然就是关闭当前的连接</span><br><span class="line">            pooled.getSocket().close();</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">		// 新开一个Connection</span><br><span class="line">        Route route = routeSelector.next();</span><br><span class="line">        return new Connection(pool, route);</span><br><span class="line">    &#125;</span><br><span class="line">	// ...省略.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>ConnectionPool.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">public final class ConnectionPool &#123;</span><br><span class="line">	//executor 的内部构建方式贴出来，希望读者也能注意到可定制线程池的使用。定制化的差别还是很大的，这里主要使用了LinkedBlockingQueue。</span><br><span class="line">	private Executor executor = new ThreadPoolExecutor(</span><br><span class="line">      0 /* corePoolSize */, 1 /* maximumPoolSize */, 60L /* keepAliveTime */, TimeUnit.SECONDS,</span><br><span class="line">      new LinkedBlockingQueue&lt;Runnable&gt;(), Util.threadFactory(&quot;OkHttp ConnectionPool&quot;, true));</span><br><span class="line">	// 内部一个Connection的缓存列表，主要用于可循环使用连接的缓存作用。  </span><br><span class="line">	private final LinkedList&lt;Connection&gt; connections = new LinkedList&lt;&gt;();</span><br><span class="line">	// ...省略.....</span><br><span class="line">	</span><br><span class="line">	/** Returns a recycled connection to &#123;@code address&#125;, or null if no such connection exists. */</span><br><span class="line">	返回一个循环使用的Connection</span><br><span class="line">  public synchronized Connection get(Address address) &#123;</span><br><span class="line">    Connection foundConnection = null;</span><br><span class="line">    for (ListIterator&lt;Connection&gt; i = connections.listIterator(connections.size());</span><br><span class="line">        i.hasPrevious(); ) &#123;</span><br><span class="line">      Connection connection = i.previous();</span><br><span class="line">      if (!connection.getRoute().getAddress().equals(address)</span><br><span class="line">          || !connection.isAlive()</span><br><span class="line">          || System.nanoTime() - connection.getIdleStartTimeNs() &gt;= keepAliveDurationNs) &#123;</span><br><span class="line">        continue;</span><br><span class="line">      &#125;</span><br><span class="line">      i.remove();</span><br><span class="line">	  // 如果不是spdy连接。</span><br><span class="line">      if (!connection.isSpdy()) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">		// 通过反射 -- 这是Android平台下的适配 主要是反射到“android.net.TrafficStats.Socket.class”，</span><br><span class="line">		// 在这下边会有tagSocket和untagSocket方法，如果想了解详细的情况，建议再对照Platform这个类仔细研究一下</span><br><span class="line">		//  // Non-null on Android 4.0+.</span><br><span class="line">		//  private final Method trafficStatsTagSocket;</span><br><span class="line">		//  private final Method trafficStatsUntagSocket;</span><br><span class="line">          Platform.get().tagSocket(connection.getSocket());</span><br><span class="line">        &#125; catch (SocketException e) &#123;</span><br><span class="line">          Util.closeQuietly(connection.getSocket());</span><br><span class="line">          // When unable to tag, skip recycling and close</span><br><span class="line">          Platform.get().logW(&quot;Unable to tagSocket(): &quot; + e);</span><br><span class="line">          continue;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">	  // 命中可循环使用Connection</span><br><span class="line">      foundConnection = connection;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 这里针对SPDY的Connection的重用，添加到队列头部</span><br><span class="line">    if (foundConnection != null &amp;&amp; foundConnection.isSpdy()) &#123;</span><br><span class="line">      connections.addFirst(foundConnection); // Add it back after iteration.</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return foundConnection;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  void recycle(Connection connection) &#123;</span><br><span class="line">  // ...省略.....</span><br><span class="line">   addConnection(connection);</span><br><span class="line">   // ...省略.....</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  void share(Connection connection) &#123;</span><br><span class="line">   // ...省略.....</span><br><span class="line">   addConnection(connection);</span><br><span class="line">   // ...省略.....</span><br><span class="line">  &#125;</span><br><span class="line">	// ...省略.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在代码段中重点标注了一下get方法来命中缓存的可循环使用的Connection，这里单独说一下这些Connection是什么时候被放入到缓存池中的：<br>1、recycle方法<br>这个recycle方法主要是针对Http1.x协议的Connection<br>2、share方法<br>在HttpEngine的nextConection()方法中，当创建完成了Connection后会执行Internal.instance.connectAndSetOwner(client, connection, this, networkRequest);<br>而这个方法最后执行时Connection.connectAndSetOwner(xxx)方法</p>
+<p><strong>Connection.java</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// ...省略.....</span><br><span class="line"> /**</span><br><span class="line">  * Connects this connection if it isn&apos;t already. This creates tunnels, shares</span><br><span class="line">  * the connection with the connection pool, and configures timeouts.</span><br><span class="line">  */</span><br><span class="line"> void connectAndSetOwner(OkHttpClient client, Object owner, Request request) throws IOException &#123;</span><br><span class="line">   setOwner(owner);</span><br><span class="line"></span><br><span class="line">   if (!isConnected()) &#123;</span><br><span class="line">  // 对请求头部的处理</span><br><span class="line">     Request tunnelRequest = tunnelRequest(request);</span><br><span class="line">  // 发起连接请求</span><br><span class="line">     connect(client.getConnectTimeout(), client.getReadTimeout(),</span><br><span class="line">         client.getWriteTimeout(), tunnelRequest);</span><br><span class="line">     if (isSpdy()) &#123;</span><br><span class="line">       client.getConnectionPool().share(this);</span><br><span class="line">     &#125;</span><br><span class="line">     client.routeDatabase().connected(getRoute());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   setTimeouts(client.getReadTimeout(), client.getWriteTimeout());</span><br><span class="line"> &#125;</span><br><span class="line"> // ...省略.....</span><br></pre></td></tr></table></figure></p>
+<p>owner作用标示当前连接是谁持有，如果是spdy的连接、属于连接池或者被丢弃那么owner都是null的。在循环使用这里是很有用的。<br>另外说一点tunnelRequest(request)方法，这里主要是为request通过HTTP proxy创建一个TLS的管道，这里牵涉到加解密的一些问题。<br>如果对网络编程比较熟悉的同学应该一看就非常明白这个方法对请求头部的关键字处理。这里就不详细展开了。<br>回到上边的代码，如果是SPDY的连接，这个Connection就会被共享，那么就会被缓存下来。</p>
+<p>再简单说一下HttpEngine的Connection真正发起重用的地方，HttpEngine.releaseConnection()。每一个HttpEngine对应一个Transport接口，而Transport接口分HttpTransport和SpdyTransport。<br>在释放连接的时候会通过各自的Transport执行canReuseConnection()，如果可以重用，那么将状态置为idle状态，同时将连接放入到连接池。<br>SPDYTransport默认是可以重用的，而HttpTransport则需要判断request和Response的状态以及连接是否关闭来决定。<br>ok，连接的缓存就讲到这里吧。</p>
+<h2 id="Connection对Http-Https-SPDY协议的选择"><a href="#Connection对Http-Https-SPDY协议的选择" class="headerlink" title="Connection对Http/Https/SPDY协议的选择"></a>Connection对Http/Https/SPDY协议的选择</h2><p>关于协议的选择，到底是走http1.x还是走http2.x的spdy，主要得从HttpEngine的Transport接口选择说起。<br>任何与网络相关的，当然第一入口就是发起请求。在HttpEngine.sendRequest()方法中可以看到Transport创建的身影Internal.instance.newTransport(connection, this);<br>通过跟踪，绕了大半圈回到Connection.newTransport方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> /** Returns the transport appropriate for this connection. */</span><br><span class="line">Transport newTransport(HttpEngine httpEngine) throws IOException &#123;</span><br><span class="line">  return (spdyConnection != null)</span><br><span class="line">      ? new SpdyTransport(httpEngine, spdyConnection)</span><br><span class="line">      : new HttpTransport(httpEngine, httpConnection);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里是通过spdyConnection是否为空来作为判断依据。那好，继续跟踪这个域到底是怎么创建的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">private void upgradeToTls(Request tunnelRequest, int readTimeout, int writeTimeout)</span><br><span class="line">      throws IOException &#123;</span><br><span class="line">    Platform platform = Platform.get();</span><br><span class="line">	// ...省略.....</span><br><span class="line">	try &#123;</span><br><span class="line">      // Force handshake. This can throw!</span><br><span class="line">      sslSocket.startHandshake();</span><br><span class="line"></span><br><span class="line">      String maybeProtocol;</span><br><span class="line">      if (route.connectionSpec.supportsTlsExtensions()</span><br><span class="line">          &amp;&amp; (maybeProtocol = platform.getSelectedProtocol(sslSocket)) != null) &#123;</span><br><span class="line">        protocol = Protocol.get(maybeProtocol); // Throws IOE on unknown.</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">      platform.afterHandshake(sslSocket);</span><br><span class="line">    &#125;</span><br><span class="line">	// ...省略.....</span><br><span class="line">	 if (protocol == Protocol.SPDY_3 || protocol == Protocol.HTTP_2) &#123;</span><br><span class="line">      sslSocket.setSoTimeout(0); // SPDY timeouts are set per-stream.</span><br><span class="line">      spdyConnection = new SpdyConnection.Builder(route.address.getUriHost(), true, socket)</span><br><span class="line">          .protocol(protocol).build();</span><br><span class="line">      spdyConnection.sendConnectionPreface();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      httpConnection = new HttpConnection(pool, this, socket);</span><br><span class="line">    &#125;</span><br><span class="line">	// ...省略.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>中间的各种加密以及握手操作这里都省略，因为我们最想看到具体体现根据不同协议创建不同连接的地方。<br>另外特意贴出了一段关于Protocol的获取方法。通过强行发起握手，感知不同平台支持的协议。有兴趣同学可以更加深入了解一下源码内部给出的Android和JdkWithJettyBootPlatform这两个类。</p>
+<p>upgradeToTls会被Connection.connect方法调起，而connect方法被上一节说连接缓存的connectAndSetOwner方法调用。这是不是就全部串联起来了呢？</p>
+<p>由于visio密钥过期，导致没法画时序图，就采用下边的一个执行箭头表示吧：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">HttpEngine</span><br><span class="line">--&gt; HttpEngine.sendRequest()</span><br><span class="line"> |--&gt; HttpEngine.connect()</span><br><span class="line"> |--&gt; HttpEngine.nextConnection()</span><br><span class="line"> | --&gt; HttpEngine.createNextConnection()</span><br><span class="line"> |   --&gt; ConnectionPool.get(address)</span><br><span class="line"> |	 --&gt; Connection.connectAndSetOwner()</span><br><span class="line"> |    	--&gt;ConnectionPool.share()</span><br><span class="line"> |	  --&gt; Connection.connect()</span><br><span class="line"> |	  --&gt; Connection.upgradeToTls()</span><br><span class="line"> |--&gt; Connection.newTransport()</span><br><span class="line"></span><br><span class="line">http1.x的reuse过程</span><br><span class="line">--&gt; HttpEngine.releaseConnection()</span><br><span class="line"> --&gt; HttpTransport.releaseConnectionOnIdle()</span><br><span class="line">  --&gt; HttpConnection.poolOnIdle()</span><br><span class="line">   --&gt; ConnectionPool.recycle()</span><br></pre></td></tr></table></figure></p>
+<h2 id="关于http1-x和spdy协议的一些对比："><a href="#关于http1-x和spdy协议的一些对比：" class="headerlink" title="关于http1.x和spdy协议的一些对比："></a>关于http1.x和spdy协议的一些对比：</h2><p>SPDY（读作“SPeeDY”）是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验。<br>SPDY并不是一种用于替代HTTP的协议，而是对HTTP协议的增强。新协议的功能包括降低延迟、数据流的多路复用、请求优先级、HTTP报头压缩以及安全强制性使用 TLS。这个从上边的源码也能看到协议的选择就有判断。<br>详细的区别这里不做进一步讨论，后面有时间个人觉得还是有必要再多深入了解一下这方面实现。由于google的推动作用，现在http2.x的已经得到很多浏览器的支持。</p>
+<p>在infoq上有一篇关于<a href="http://www.infoq.com/cn/news/2015/02/https-spdy-http2-comparison/" target="_blank" rel="external">HTTPS、SPDY和HTTP/2的性能比较</a>的文章。有需要的同学可以去看看吧。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/07/01/android-theme/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Android统一风格 —— 主题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/16/android-retrofit/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Retrofit源码解析</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-okhttp-connectionpool-http1-x-http2-x" data-title="OKHttp源码解析-ConnectionPool对Connection重用机制&amp;Http/Https/SPDY协议选择" data-url="http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

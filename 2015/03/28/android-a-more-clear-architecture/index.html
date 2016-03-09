@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>一种更清晰的Android架构 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原文链接 : Architecting Android…The clean way?
+译者 : Mr.Simple &amp;amp; Sophie.Ping
+
+
+过去几个月以来，通过在Tuenti网站上与@pedro_g_s和@flipper83（安卓开发两位大牛）进行友好讨论之后，我决定写这篇关于架构安卓应用的文章。     
+我写这篇文章的目的是想把我在过去几个月体悟到的小方法以及在调查和应用中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一种更清晰的Android架构">
+<meta property="og:url" content="http://frodoking.github.io/2015/03/28/android-a-more-clear-architecture/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="原文链接 : Architecting Android…The clean way?
+译者 : Mr.Simple &amp;amp; Sophie.Ping
+
+
+过去几个月以来，通过在Tuenti网站上与@pedro_g_s和@flipper83（安卓开发两位大牛）进行友好讨论之后，我决定写这篇关于架构安卓应用的文章。     
+我写这篇文章的目的是想把我在过去几个月体悟到的小方法以及在调查和应用中">
+<meta property="og:image" content="https://camo.githubusercontent.com/dd69e725f30c30031dea279adc5a9d09ea3432f2/687474703a2f2f6665726e616e646f63656a61732e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031342f30392f636c65616e5f617263686974656374757265312e706e67">
+<meta property="og:image" content="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_android.png">
+<meta property="og:image" content="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_mvp.png">
+<meta property="og:image" content="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_domain.png">
+<meta property="og:image" content="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_data.png">
+<meta property="og:updated_time" content="2015-09-14T04:18:05.348Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一种更清晰的Android架构">
+<meta name="twitter:description" content="原文链接 : Architecting Android…The clean way?
+译者 : Mr.Simple &amp;amp; Sophie.Ping
+
+
+过去几个月以来，通过在Tuenti网站上与@pedro_g_s和@flipper83（安卓开发两位大牛）进行友好讨论之后，我决定写这篇关于架构安卓应用的文章。     
+我写这篇文章的目的是想把我在过去几个月体悟到的小方法以及在调查和应用中">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/dd69e725f30c30031dea279adc5a9d09ea3432f2/687474703a2f2f6665726e616e646f63656a61732e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031342f30392f636c65616e5f617263686974656374757265312e706e67">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-a-more-clear-architecture" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/28/android-a-more-clear-architecture/" class="article-date">
+  	<time datetime="2015-03-28T15:00:20.000Z" itemprop="datePublished">3月 28 2015</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一种更清晰的Android架构
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/architecture/">架构</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<ul>
+<li>原文链接 : <a href="http://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/" target="_blank" rel="external">Architecting Android…The clean way?</a></li>
+<li>译者 : <a href="https://www.github.com/bboyfeiyu" target="_blank" rel="external">Mr.Simple &amp; Sophie.Ping</a></li>
+</ul>
+</blockquote>
+<p>过去几个月以来，通过在Tuenti网站上与@pedro_g_s和@flipper83（安卓开发两位大牛）进行友好讨论之后，我决定写这篇关于架构安卓应用的文章。     </p>
+<p>我写这篇文章的目的是想把我在过去几个月体悟到的小方法以及在调查和应用中学到的有用的东西分享给大家。<br><a id="more"></a></p>
+<h2 id="入门指南"><a href="#入门指南" class="headerlink" title="入门指南"></a>入门指南</h2><p>大家都知道要写一款精品软件是有难度且很复杂的：不仅要满足特定要求，而且软件还必须具有稳健性，可维护、可测试性强，并且能够灵活适应各种发展与变化。这时候，“清晰架构”就应运而生了，这一架构在开发任何软件应用的时候用起来非常顺手。</p>
+<p>这个思路很简单：简洁架构 意味着产品系统中遵循一系列的习惯原则：</p>
+<blockquote>
+<ul>
+<li>框架独立性</li>
+<li>可测试</li>
+<li>UI独立性</li>
+<li>数据库独立性</li>
+<li>任何外部代理模块的独立性  </li>
+</ul>
+</blockquote>
+<p><img src="https://camo.githubusercontent.com/dd69e725f30c30031dea279adc5a9d09ea3432f2/687474703a2f2f6665726e616e646f63656a61732e636f6d2f77702d636f6e74656e742f75706c6f6164732f323031342f30392f636c65616e5f617263686974656374757265312e706e67" alt="arch"></p>
+<p>我们并不要求一定要用四环结构（如图所示），这只是一个示例图解，但是要考虑的是依赖项规则：源码依赖项只能向内指向，内环里的所有项不能了解外环所发生的东西。  </p>
+<p>以下是更好地理解和熟悉本方法的一些相关词汇：     </p>
+<blockquote>
+<ul>
+<li>Entities：是指一款应用的业务对象</li>
+<li>Use cases：是指结合数据流和实体中的用例，也称为Interactor</li>
+<li>Interface Adapters： 这一组适配器，是负责以最合理的格式转换用例（use cases）和实体（entities）之间的数据，表现层（Presenters ）和控制层（Controllers），就属于这一块的。</li>
+<li>Frameworks and Drivers: 这里是所有具体的实现了：比如：UI，工具类，基础框架，等等。</li>
+</ul>
+</blockquote>
+<p>想要更具体，更生动丰富的解释，可以参考<a href="http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank" rel="external">这篇文章</a>或者<a href="https://vimeo.com/43612849" target="_blank" rel="external">这个视频</a>。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>我会设置一个简单的场景来开始：创建一个简单的小app，app中显示从云端获取的一个朋友或用户列表。当点击其中任何一个时，会打开一个新的窗口，显示该用户的详细信息。这里我放了一段视频，大家看看<a href="http://fernandocejas.com/2014/09/03/architecting-android-the-clean-way/" target="_blank" rel="external">这个视频 (需翻墙)</a>大概就可以对我所描述的东西了解个大概了。 </p>
+<h2 id="Android应用架构"><a href="#Android应用架构" class="headerlink" title="Android应用架构"></a>Android应用架构</h2><p>这一对象遵循关注分离原则，也就是通过业务规则让内环操作对外环事物一无所知，这样一来，在测试时它们就不会依赖任何的外部元素了。<br>要达到这个目的，我的建议就是把一个项目分成三个层次，每个层次拥有自己的目的并且各自独立于堆放运作。<br>值得一提的是，每一层次使用其自有的数据模型以达到独立性的目的（大家可以看到，在代码中需要一个数据映射器来完成数据转换。如果你不想把你的模型和整个应用交叉使用，这是你要付出的代价）。    </p>
+<p>以下是图解，大家感受下：<br><img src="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_android.png" alt="schema"></p>
+<p>注：我并没有使用任何的外部库（除了用于json数据句法分析的gson和用于测试的junit, mockito, robolectric和espresso以外）。原因是它可以使这个示例更清晰。总之，在存储磁盘数据时，记得加上ORM、依赖注入框架或者你熟悉的任何工具或库，这些都会带来很大帮助。（记住：重复制造轮子可不是明智的选择）</p>
+<h2 id="表现层-Presentation-Layer"><a href="#表现层-Presentation-Layer" class="headerlink" title="表现层 (Presentation Layer)"></a>表现层 (Presentation Layer)</h2><p>表现层在此，表现的是与视图和动画相关的逻辑。这里仅用了一个Model View Presenter（下文简称MVP），但是大家也可以用MVC或MVVM等模式。这里我不再赘述细节，但是需要强调的是，这里的fragment和activity都是View,其内部除了UI逻辑以外没有其他逻辑，这也是所有渲染的东西发生的地方。<br>本层次的Presenter由多个interactor（用例）组成，用于完成Android UI线程以外的新线程的工作，并借助渲染到view中的数据callback函数来返回。<br><img src="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_mvp.png" alt="mvp"> </p>
+<p>如果你需要一个使用MVP和MVVM的<a href="https://github.com/pedrovgs/EffectiveAndroidUI/" target="_blank" rel="external">Effective Android UI</a>典型案例，可以参考我朋友Pedro Gómez的文章。</p>
+<h2 id="领域层-Domain-Layer"><a href="#领域层-Domain-Layer" class="headerlink" title="领域层 (Domain Layer)"></a>领域层 (Domain Layer)</h2><p>这里的业务规则是指所有在本层发生的逻辑。对于Android项目来说，大家还可以看到所有的interactor（用例）实施。这一层是纯粹的java模块，没有任何的Android依赖性。当涉及到业务对象时，所有的外部组件都使用接口。<br><img src="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_domain.png" alt="domain"> </p>
+<h2 id="数据层-Data-Layer"><a href="#数据层-Data-Layer" class="headerlink" title="数据层 (Data Layer)"></a>数据层 (Data Layer)</h2><p>应用所需的所有数据都来自这一层中的UserRepository实现（接口在领域层）。这一实现采用了<a href="http://martinfowler.com/eaaCatalog/repository.html" target="_blank" rel="external">Repository Pattern</a>，主要策略是通过一个工厂根据一定的条件选取不同的数据来源。<br>比如，通过ID获取一个用户时，如果这个用户在缓存中已经存在，则硬盘缓存数据源会被选中，否则会通过向云端发起请求获取数据，然后存储到硬盘缓存。<br>这一切背后的原理是由于原始数据对于客户端是透明的，客户端并不关心数据是来源于内存、硬盘还是云端，它需要关心的是数据可以正确地获取到。<br><img src="http://fernandocejas.com/wp-content/uploads/2014/09/clean_architecture_data.png" alt="data">   </p>
+<ul>
+<li>注：在代码方面，出于学习目的，我通过文件系统和Android preference实现了一个简单、原始的硬盘缓存。请记住，如果已经存在了能够完成这些工作的库，就不要重复制造轮子。</li>
+</ul>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>这是一个长期待解决的讨论话题，如果大家能够分享各自的解决方案，那真真是极好的。<br>我的策略是使用回调，这样的话，如果数据仓库发生了变化，回调有两个方法：onResponse()和onError(). onError方法将异常信息封装到一个ErrorBundle对象中: 这种方法的难点在于这其中会存在一环扣一环的回调链，错误会沿着这条回调链到达展示层。因此会牺牲一点代码的可读性。另外，如果出现错误，我本来可以通过事件总线系统抛出事件，但是这种实现方式类似于使用C语言的goto语法。在我看来，当你订阅多个事件时，如果不能很好的控制，你可能会被弄得晕头转向。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>关于测试方面，我根据不同的层来选择不同的方法:    </p>
+<blockquote>
+<ul>
+<li>展示层 ( Presentation Layer) : 使用android instrumentation和 espresso进行集成和功能测试</li>
+<li>领域层 ( Domain Layer) : 使用JUnit和Mockito进行单元测试；</li>
+<li>数据层 ( Data Layer) : 使用Robolectric （ 因为依赖于Android SDK中的类 ）进行集成测试和单元测试。</li>
+</ul>
+</blockquote>
+<h2 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h2><p>我猜你现在在想，扯了那么久的淡，代码究竟在哪里呢？ 好吧，这就是你可以找到上述解决方案的<a href="https://github.com/android10/Android-CleanArchitecture" target="_blank" rel="external">github链接</a>。还要提一点，在文件夹结构方面，不同的层是通过以下不同的模块反应的:     </p>
+<blockquote>
+<ul>
+<li>presentation: 展示层的Android模块</li>
+<li>domain: 一个没有android依赖的java模块</li>
+<li>data: 一个数据获取来源的android模块。</li>
+<li>data-test: 数据层测试，由于使用Robolectric 存在一些限制，所以我得再独立的java模块中使用。</li>
+</ul>
+</blockquote>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>正如 Bob大叔 所说：“Architecture is About Intent, not Frameworks” ，我非常同意这个说法，当然了，有很多不同的方法做不同的事情（不同的实现方法），我很确定，你每天（像我一样）会面临很多挑战，但是遵循这些方法，可以确保你的应用会： </p>
+<blockquote>
+<ul>
+<li>易维护 Easy to maintain</li>
+<li>易测试 Easy to tes.</li>
+<li>高内聚 Very cohesive.</li>
+<li>低耦合 Decoupled.     </li>
+</ul>
+</blockquote>
+<p>最后，我强烈推荐你去实践一下，并且分享你的经验。也许你会找到更好的解决方案：我们都知道，不断提升自己是一件件非常好的事。我希望这篇文章对你有所帮助，欢迎拍砖。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<ul>
+<li><a href="https://github.com/android10/Android-CleanArchitecture" target="_blank" rel="external">https://github.com/android10/Android-CleanArchitecture</a></li>
+<li><a href="http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank" rel="external">The clean architecture by Uncle Bob</a></li>
+<li><a href="http://www.infoq.com/news/2013/07/architecture_intent_frameworks" target="_blank" rel="external">Architecture is about Intent, not Frameworks</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter" target="_blank" rel="external">Model View Presenter</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/repository.html" target="_blank" rel="external">Repository Pattern by Martin Fowler</a></li>
+<li><a href="http://www.slideshare.net/PedroVicenteGmezSnch/" target="_blank" rel="external">Android Design Patterns Presentation</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/30/android-eventbus-otto-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          事件总线 —— otto的bus和eventbus对比分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/22/android-ui-design/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">UI的整体设计思路（避免臃肿的UI）</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-a-more-clear-architecture" data-title="一种更清晰的Android架构" data-url="http://frodoking.github.io/2015/03/28/android-a-more-clear-architecture/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>令人尖叫的架构 | Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原文：https://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html
+想像一下，你正在看一栋大楼的蓝图。建筑师为你准备了一份修建大楼的计划文档，那你从这些计划文档中能知道些什么呢？如果你看的计划书是针对单个家庭住户的话，那么你可能会看到一个前门，一个通向客厅或者是餐厅的门厅。靠近饭厅很可能离厨房有一段很短的距离。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="令人尖叫的架构">
+<meta property="og:url" content="http://frodoking.github.io/2015/11/11/screaming-architecture/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="原文：https://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html
+想像一下，你正在看一栋大楼的蓝图。建筑师为你准备了一份修建大楼的计划文档，那你从这些计划文档中能知道些什么呢？如果你看的计划书是针对单个家庭住户的话，那么你可能会看到一个前门，一个通向客厅或者是餐厅的门厅。靠近饭厅很可能离厨房有一段很短的距离。">
+<meta property="og:updated_time" content="2015-11-11T09:09:50.019Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="令人尖叫的架构">
+<meta name="twitter:description" content="原文：https://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html
+想像一下，你正在看一栋大楼的蓝图。建筑师为你准备了一份修建大楼的计划文档，那你从这些计划文档中能知道些什么呢？如果你看的计划书是针对单个家庭住户的话，那么你可能会看到一个前门，一个通向客厅或者是餐厅的门厅。靠近饭厅很可能离厨房有一段很短的距离。">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-screaming-architecture" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/11/screaming-architecture/" class="article-date">
+  	<time datetime="2015-11-11T07:19:38.000Z" itemprop="datePublished">11月 11 2015</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      令人尖叫的架构
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/architecture/">架构</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>原文：<a href="https://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html" target="_blank" rel="external">https://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html</a></p>
+<p>想像一下，你正在看一栋大楼的蓝图。建筑师为你准备了一份修建大楼的计划文档，那你从这些计划文档中能知道些什么呢？<br>如果你看的计划书是针对单个家庭住户的话，那么你可能会看到一个前门，一个通向客厅或者是餐厅的门厅。靠近饭厅很可能离厨房有一段很短的距离。也许厨房的旁边是扇子区，也可能是一个卧室。当你看着这些计划，你毫无疑问的就会想到你正在看的是一套房子。该架构就叫做“房子”。</p>
+<p>或者，如果你在一座图书馆的架构时，在这个图书馆里，你很可能看到一个宏伟的入口，一个出入检查区域，阅读区，小型会议室和一排排用于放书的书架。这种架构就叫做“图书馆”。</p>
+<p>因此，你的应用架构重点是什么呢？当你看到顶层的目录结构和在最高级别的包的源文件时，重点是医疗保健系统，或者是会计系统，或者是库存管理系统？还是Rails, 或者 Spring/Hibernate, 或者ASP呢？<br><a id="more"></a></p>
+<h2 id="架构的主题"><a href="#架构的主题" class="headerlink" title="架构的主题"></a>架构的主题</h2><p>回过头来去读Ivar Jacobson关于软件架构一书《面向对象软件工程（Object Oriented Software Engineering）》。这本书的副标题是：一种用例驱动方法（A use case driven approach）。在这本书里Ivar明确指出，软件架构是支持系统用例的结构。就像一栋房子或者是一座图书馆的计划主要关注的是这些建筑的用例，因此，一个软件应用也应该重点关注应用本身的用例。</p>
+<p>架构并不是框架（也不应该是）。架构不应该由框架提供。框架是要使用的工具，而架构并不是。如果你的架构是基于框架，那么就不能根据你的用例。</p>
+<h2 id="架构的目的"><a href="#架构的目的" class="headerlink" title="架构的目的"></a>架构的目的</h2><p>好的架构主要关心用例的原因是可以让软件设计师能够安全的描述结构来支持这些用例，而不用关心框架，工具和工程环境。再回到房子的计划上，建筑设计师首先关心的是确保这个房子是可使用的，而不是确保这个房子是用什么样的砖来修建。事实上，建筑设计师必须精心设计计划来确保房主可以决定使用砖、石或者是雪松的情况得到满足。</p>
+<p>一个优秀的软件架构允许可以推迟框架、数据库、web服务器和其他环境问题以及工具的约定。不需要立即决定用Rails、Spring、Hibernate、Tomcat或者MySql，当然直到最后的项目。一个好的架构可以很容易地改变这些主意的决定。并且强调用例，从外部考虑中来让他们解耦。</p>
+<h2 id="Web工程又是什么？"><a href="#Web工程又是什么？" class="headerlink" title="Web工程又是什么？"></a>Web工程又是什么？</h2><p>Web工程是一个架构吗？交付在网络上的你的系统真的就决定了你的系统架构吗？当然不是！Web只是一种展示或者发布的机制，并且你的应用架构也应该这么认为。事实上，你的应用通过Web来展示只是一个细节，不能决定你的系统结构。并且，你的应用通过Web这些事情你应该延后考虑。所以，你的系统应该忽略该如何来发布该项目的事情。你可以作为一个控制台应用程序、Web应用程序或者客户端应用程序，甚至是Web服务应用程序，对于基本架构无需过分复杂和变动。</p>
+<h2 id="框架只是工具"><a href="#框架只是工具" class="headerlink" title="框架只是工具"></a>框架只是工具</h2><p>框架是非常强大和非常有用的。框架开发者往往很相信他们的框架，他们写如何利用自己框架的例子就能说明这一点。谁写的框架，其他一些写框架的开发者也对框架深信不疑。他们展示使用该框架的方式。通常情况下，这就是一个无所不包，无所不在，框架至上的思维。当然这不是你想要采取的立场。</p>
+<p>当我们带着一双疲惫的眼睛看着每个框架时。我们抱以怀疑态度可能会有帮助，但是代价又怎样呢？我应该如何使用它，我该如何保护自己的框架免受它的影响。我该如何维护我的架构所强调的测试用例？如何防止自身的框架被这样的架构接管呢？ </p>
+<h2 id="可测试架构"><a href="#可测试架构" class="headerlink" title="可测试架构"></a>可测试架构</h2><p>如果你的系统架构是基于用例的，如果你保持你的所有框架在同一个公平等级上。那么你应该能够不用任何替代框架来完成所有用例的单元测试。您应该不需要为了运行你的测试运行Web服务器。你不需要连接数据库来运行你的测试。您的业务对象应该是普通对象，不依赖与框架、数据库或其他复杂逻辑。你的用例对象应该和你的业务对象保持一致。所有的测试用例再一起也是可以立即可测试的，跟框架无关。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>你的架构应该告诉读者这是一个系统，而不是你在系统中使用的框架。如果你构建一个医疗保健系统，当新的程序员看到该系统的源码是，他们的第一映像应该是“这就是一个医疗保健系统”。这些新的程序员应该先知道所有的系统用例，而不是先知道系统是如何实现的。他们可能过来说，“我们看到一些东西像是Model，但是View和Controller在哪儿呢？”，而你应该说，“噢，在这个时候你不需要去关心这些细节，在后面我们将会展示给你”。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/01/android-weekly/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Android Weekly 值得收藏的项
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/09/08/reactivex/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ReactiveX--响应式编程</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="screaming-architecture" data-title="令人尖叫的架构" data-url="http://frodoking.github.io/2015/11/11/screaming-architecture/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

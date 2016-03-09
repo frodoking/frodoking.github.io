@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Frodo&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
+categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frodo's Blog">
+<meta property="og:url" content="http://frodoking.github.io/2016/03/09/android-glide/index.html">
+<meta property="og:site_name" content="Frodo's Blog">
+<meta property="og:description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
+categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_ModelLoaderDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_DataFetcherDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_TargetDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_ResourceDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_ResourceTransformationDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_PoolDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_CacheDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_DecoderDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_EncoderDiagram.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_Decode_Exe.png">
+<meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_Response_Exe.png">
+<meta property="og:updated_time" content="2015-11-29T12:24:49.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Frodo's Blog">
+<meta name="twitter:description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
+categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇">
+<meta name="twitter:image" content="http://frodoking.github.io/img/glide/Glide_ModelLoaderDiagram.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Frodo</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">文章列表</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+								<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/android/" style="font-size: 20px;">Android</a> <a href="/tags/java/" style="font-size: 15px;">Java</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/music/" style="font-size: 10px;">音乐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zipperary.com/">Zipperra&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.github.io/">Litten&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://scatterman.github.io/">Scatterman&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.danlew.net/">Dan Lew&#39;s Blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://diptech.sinaapp.com/">老苗的blog</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://codekk.com/open-source-project-analysis">codekk</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://androidweekly.net/">AndroidWeekly</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.google.com.cn">Google</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.baidu.com">Baidu</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Frodo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://avatars0.githubusercontent.com/u/7484982?v=3&amp;u=4e45871de440c2bd2302a5420358118d6a4950f7&amp;s=140" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Frodo</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">熟悉的歌谣里，藏着童话的影子。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">文章列表</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/frodoking" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2351718353" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+						<a class="Sitemap" target="_blank" href="/sitemap.xml" title="Sitemap">Sitemap</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-android-glide" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/09/android-glide/" class="article-date">
+  	<time datetime="2016-03-09T09:25:22.748Z" itemprop="datePublished">3月 9 2016</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: Android Glide源码解析<br>date: 2015-10-10 11:03:19<br>tags: [Android,Java]</p>
+<h2 id="categories-编程-源码"><a href="#categories-编程-源码" class="headerlink" title="categories: [编程,源码]"></a>categories: [编程,源码]</h2><h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>使用文章介绍以及和Picasso的对比分析请参考<a href="http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en" target="_blank" rel="external">Introduction to Glide, Image Loader Library for Android, recommended by Google</a></p>
+<p>由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。<br>本文基于github上Glide最新代码4.0.0版本做解析。<br>最基本的使用方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(this)</span><br><span class="line">                .asDrawable()</span><br><span class="line">                .load(&quot;http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg&quot;)</span><br><span class="line">                .apply(fitCenterTransform(this))</span><br><span class="line">                .apply(placeholderOf(R.drawable.skyblue_logo_wechatfavorite_checked))</span><br><span class="line">                .into(imageView);</span><br></pre></td></tr></table></figure></p>
+<p>Glide使用了现在非常流行的流氏编码方式，方便了开发者的使用，简明、扼要。<br>接下来主要对上面这一段流氏操作做拆分。<br><a id="more"></a></p>
+<h3 id="Glide-主入口"><a href="#Glide-主入口" class="headerlink" title="Glide 主入口"></a>Glide 主入口</h3><p>这个类有点像门脸模式的统一代理入口，不过实际作用在4.0.0中很多功能都被放到后面的其他类中，此类关注的点就很少了。虽然整个libray的所有需要的组建都在这个类中，但是实际也只是一个统一初始化的地方。</p>
+<h3 id="RequestManager（Glide-with-…-）"><a href="#RequestManager（Glide-with-…-）" class="headerlink" title="RequestManager（Glide.with(…)）"></a>RequestManager（Glide.with(…)）</h3><p>这个类主要用于管理和启动Glide的所有请求，可以使用activity，fragment或者连接生命周期的事件去智能的停止，启动，和重启请求。也可以检索或者通过实例化一个新的对象，或者使用静态的Glide去利用构建在Activity和Fragment生命周期处理中。它的方法跟你的Fragment和Activity的是同步的。</p>
+<h3 id="RequestBuilder"><a href="#RequestBuilder" class="headerlink" title="RequestBuilder"></a>RequestBuilder</h3><p>通用类，可以处理设置选项，并启动负载的通用资源类型。</p>
+<p>在这个类中，主要是应用请求的很多选项(如下的选项从字面都能看出具体的用处，在ImageView控件中经常也能看到，另外之前版本可不是这么使用的)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public final class RequestOptions extends BaseRequestOptions&lt;RequestOptions&gt; &#123;</span><br><span class="line"></span><br><span class="line">  private static RequestOptions skipMemoryCacheTrueOptions;</span><br><span class="line">  private static RequestOptions skipMemoryCacheFalseOptions;</span><br><span class="line">  private static RequestOptions fitCenterOptions;</span><br><span class="line">  private static RequestOptions centerCropOptions;</span><br><span class="line">  private static RequestOptions circleCropOptions;</span><br><span class="line">  private static RequestOptions noTransformOptions;</span><br><span class="line">  private static RequestOptions noAnimationOptions;</span><br><span class="line">  </span><br><span class="line">  // ...省略...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>RequestBuilder<transcodetype> transition(TransitionOptions transitionOptions){} 这个方法主要是用于加载对象从占位符（placeholder）或者缩略图（thumbnail）到真正对象加载完成的转场动画。</transcodetype></p>
+<p>RequestBuilder<transcodetype> load(…){}多太方法中，这里可以加载很多类型的数据对象，可以是String，Uri，File，resourceId，byte[]这些。当然这些后面对应的编码方式也是不一样的。</transcodetype></p>
+<p>Target<transcodetype> into(…){}这个方法是触发Request真正启动的地方，在上边的示例中最后就是调用这个方法发起请求。</transcodetype></p>
+<p>不得不说的registry域，这个域挂载了很多元件，该注册器中囊括了模块加载器（ModelLoader）、编码器（Encoder）、资源解码器（ResourceDecoder）、资源编码器（ResourceEncoder）、数据回转器（DataRewinder）、转码器（Transcoder）。这些都是Glide在对资源编解码中既是基础又是核心功能。</p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p>这里主要列举一下一些重要的组件以及他们的结构关系：<br><strong>ModelLoader</strong><br><img src="http://frodoking.github.io/img/glide/Glide_ModelLoaderDiagram.png" alt="ModelLoader"></p>
+<p><strong>DataFetcher</strong><br><img src="http://frodoking.github.io/img/glide/Glide_DataFetcherDiagram.png" alt="DataFetcher"></p>
+<p><strong>Target</strong><br><img src="http://frodoking.github.io/img/glide/Glide_TargetDiagram.png" alt="Target"></p>
+<p><strong>Resource</strong><br><img src="http://frodoking.github.io/img/glide/Glide_ResourceDiagram.png" alt="Resource"></p>
+<p><strong>ResourceTransformation</strong><br><img src="http://frodoking.github.io/img/glide/Glide_ResourceTransformationDiagram.png" alt="ResourceTransformation"></p>
+<p><strong>Pool</strong><br><img src="http://frodoking.github.io/img/glide/Glide_PoolDiagram.png" alt="Pool"></p>
+<p><strong>Cache</strong><br><img src="http://frodoking.github.io/img/glide/Glide_CacheDiagram.png" alt="Cache"></p>
+<p><strong>Decoder</strong><br><img src="http://frodoking.github.io/img/glide/Glide_DecoderDiagram.png" alt="Decoder"></p>
+<p><strong>Encoder</strong><br><img src="http://frodoking.github.io/img/glide/Glide_EncoderDiagram.png" alt="Encoder"><br>把这些组件代码结构列举出来主要是为了让读者和使用者一目了然的看到自己需要的一些功能。</p>
+<h2 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h2><h3 id="1、根据不同版本的Fragment创建RequestManagerFragment或者SupportRequestManagerFragment，并加入到对应的FragmentManager中。这两种Fragment是不带有任何界面的，主要是用于同步生命周期。具体实现如下："><a href="#1、根据不同版本的Fragment创建RequestManagerFragment或者SupportRequestManagerFragment，并加入到对应的FragmentManager中。这两种Fragment是不带有任何界面的，主要是用于同步生命周期。具体实现如下：" class="headerlink" title="1、根据不同版本的Fragment创建RequestManagerFragment或者SupportRequestManagerFragment，并加入到对应的FragmentManager中。这两种Fragment是不带有任何界面的，主要是用于同步生命周期。具体实现如下："></a>1、根据不同版本的Fragment创建RequestManagerFragment或者SupportRequestManagerFragment，并加入到对应的FragmentManager中。这两种Fragment是不带有任何界面的，主要是用于同步生命周期。具体实现如下：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">public static RequestManager with(Context context) &#123;</span><br><span class="line">    RequestManagerRetriever retriever = RequestManagerRetriever.get();</span><br><span class="line">    return retriever.get(context);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">// RequestManagerRetriever.get(...)  </span><br><span class="line">@TargetApi(Build.VERSION_CODES.HONEYCOMB)</span><br><span class="line">  public RequestManager get(Activity activity) &#123;</span><br><span class="line">    if (Util.isOnBackgroundThread() || Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.HONEYCOMB) &#123;</span><br><span class="line">      return get(activity.getApplicationContext());</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      assertNotDestroyed(activity);</span><br><span class="line">      android.app.FragmentManager fm = activity.getFragmentManager();</span><br><span class="line">      return fragmentGet(activity, fm, null);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  @TargetApi(Build.VERSION_CODES.HONEYCOMB)</span><br><span class="line">  RequestManager fragmentGet(Context context, android.app.FragmentManager fm,</span><br><span class="line">      android.app.Fragment parentHint) &#123;</span><br><span class="line">    RequestManagerFragment current = getRequestManagerFragment(fm, parentHint);</span><br><span class="line">    RequestManager requestManager = current.getRequestManager();</span><br><span class="line">    if (requestManager == null) &#123;</span><br><span class="line">      requestManager =</span><br><span class="line">          new RequestManager(context, current.getLifecycle(), current.getRequestManagerTreeNode());</span><br><span class="line">      current.setRequestManager(requestManager);</span><br><span class="line">    &#125;</span><br><span class="line">    return requestManager;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)</span><br><span class="line">  RequestManagerFragment getRequestManagerFragment(</span><br><span class="line">      final android.app.FragmentManager fm, android.app.Fragment parentHint) &#123;</span><br><span class="line">    RequestManagerFragment current = (RequestManagerFragment) fm.findFragmentByTag(FRAGMENT_TAG);</span><br><span class="line">    if (current == null) &#123;</span><br><span class="line">      current = pendingRequestManagerFragments.get(fm);</span><br><span class="line">      if (current == null) &#123;</span><br><span class="line">        current = new RequestManagerFragment();</span><br><span class="line">        current.setParentFragmentHint(parentHint);</span><br><span class="line">        pendingRequestManagerFragments.put(fm, current);</span><br><span class="line">        fm.beginTransaction().add(current, FRAGMENT_TAG).commitAllowingStateLoss();</span><br><span class="line">        handler.obtainMessage(ID_REMOVE_FRAGMENT_MANAGER, fm).sendToTarget();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return current;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2、创建一个RequestBuilder，并添加一个DrawableTransitionOptions类型的转场动画"><a href="#2、创建一个RequestBuilder，并添加一个DrawableTransitionOptions类型的转场动画" class="headerlink" title="2、创建一个RequestBuilder，并添加一个DrawableTransitionOptions类型的转场动画"></a>2、创建一个RequestBuilder，并添加一个DrawableTransitionOptions类型的转场动画</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public RequestBuilder&lt;Drawable&gt; asDrawable() &#123;</span><br><span class="line">    return as(Drawable.class).transition(new DrawableTransitionOptions());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3、加载对象（model域）"><a href="#3、加载对象（model域）" class="headerlink" title="3、加载对象（model域）"></a>3、加载对象（model域）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public RequestBuilder&lt;TranscodeType&gt; load(@Nullable Object model) &#123;</span><br><span class="line">    return loadGeneric(model);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">private RequestBuilder&lt;TranscodeType&gt; loadGeneric(@Nullable Object model) &#123;</span><br><span class="line">    this.model = model;</span><br><span class="line">    isModelSet = true;</span><br><span class="line">    return this;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4、装载对象（包含请求的发起点）。"><a href="#4、装载对象（包含请求的发起点）。" class="headerlink" title="4、装载对象（包含请求的发起点）。"></a>4、装载对象（包含请求的发起点）。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public &lt;Y extends Target&lt;TranscodeType&gt;&gt; Y into(@NonNull Y target) &#123;</span><br><span class="line">    Util.assertMainThread();</span><br><span class="line">    Preconditions.checkNotNull(target);</span><br><span class="line">    if (!isModelSet) &#123;</span><br><span class="line">      throw new IllegalArgumentException(&quot;You must call #load() before calling #into()&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Request previous = target.getRequest();</span><br><span class="line"></span><br><span class="line">    if (previous != null) &#123;</span><br><span class="line">      requestManager.clear(target);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    requestOptions.lock();</span><br><span class="line">    Request request = buildRequest(target);</span><br><span class="line">    target.setRequest(request);</span><br><span class="line">    requestManager.track(target, request);</span><br><span class="line"></span><br><span class="line">    return target;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>一般而言，大部分使用者都是用来装载图片的，因此都会调用如下这个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public Target&lt;TranscodeType&gt; into(ImageView view) &#123;</span><br><span class="line">    Util.assertMainThread();</span><br><span class="line">    Preconditions.checkNotNull(view);</span><br><span class="line"></span><br><span class="line">    if (!requestOptions.isTransformationSet()</span><br><span class="line">        &amp;&amp; requestOptions.isTransformationAllowed()</span><br><span class="line">        &amp;&amp; view.getScaleType() != null) &#123;</span><br><span class="line">      if (requestOptions.isLocked()) &#123;</span><br><span class="line">        requestOptions = requestOptions.clone();</span><br><span class="line">      &#125;</span><br><span class="line">      switch (view.getScaleType()) &#123;</span><br><span class="line">        case CENTER_CROP:</span><br><span class="line">          requestOptions.optionalCenterCrop(context);</span><br><span class="line">          break;</span><br><span class="line">        case FIT_CENTER:</span><br><span class="line">        case FIT_START:</span><br><span class="line">        case FIT_END:</span><br><span class="line">          requestOptions.optionalFitCenter(context);</span><br><span class="line">          break;</span><br><span class="line">        //$CASES-OMITTED$</span><br><span class="line">        default:</span><br><span class="line">          // Do nothing.</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return into(context.buildImageViewTarget(view, transcodeClass));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里针对ImageView的填充方式做了筛选并对应设置到requestOptions上。最终的是通过ImageView和转码类型（transcodeClass）创建不通过的Target（例如Bitmap对应的BitmapImageViewTarget和Drawable对应的DrawableImageViewTarget）</p>
+<p><strong>4.1 Request的创建buildRequest(target)。</strong><br>在Request的创建中会针对是否有缩略图来创建不同尺寸的请求，缩略图方法可以使用RequestBuilder.thumbnail(…)方法来添加上。<br>Glide中的Request都是使用了SingleRequest类，当然缩略图采用的是ThumbnailRequestCoordinator类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private Request obtainRequest(Target&lt;TranscodeType&gt; target,</span><br><span class="line">      BaseRequestOptions&lt;?&gt; requestOptions, RequestCoordinator requestCoordinator,</span><br><span class="line">      TransitionOptions&lt;?, ? super TranscodeType&gt; transitionOptions, Priority priority,</span><br><span class="line">      int overrideWidth, int overrideHeight) &#123;</span><br><span class="line">    requestOptions.lock();</span><br><span class="line"></span><br><span class="line">    return SingleRequest.obtain(</span><br><span class="line">        context,</span><br><span class="line">        model,</span><br><span class="line">        transcodeClass,</span><br><span class="line">        requestOptions,</span><br><span class="line">        overrideWidth,</span><br><span class="line">        overrideHeight,</span><br><span class="line">        priority,</span><br><span class="line">        target,</span><br><span class="line">        requestListener,</span><br><span class="line">        requestCoordinator,</span><br><span class="line">        context.getEngine(),</span><br><span class="line">        transitionOptions.getTransitionFactory());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>比较值得推崇的是SingleRequest.obtain写法，个人认为比new关键字更简洁明了吧。</p>
+<p>target.setRequest(request)也是一个比较值得注意的地方，如果target是ViewTarget，那么request会被设置到View的tag上。这样其实是有一个好处，每一个View有一个自己的Request，如果有重复请求，那么都会先去拿到上一个已经绑定的Request，并且从RequestManager中清理回收掉。这应该是去重的功能。</p>
+<p><strong>4.2 requestManager.track(target, request)</strong><br>这个方法非常的复杂，主要用于触发请求、编解码、装载和缓存这些功能。下面就一步一步来看吧：</p>
+<p><strong>4.2.1 缓存target，并启动Request</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void track(Target&lt;?&gt; target, Request request) &#123;</span><br><span class="line">    targetTracker.track(target);</span><br><span class="line">    requestTracker.runRequest(request);</span><br><span class="line">  &#125;</span><br><span class="line">  /**</span><br><span class="line">   * Starts tracking the given request.</span><br><span class="line">   */</span><br><span class="line">  public void runRequest(Request request) &#123;</span><br><span class="line">    requests.add(request); //添加内存缓存</span><br><span class="line">    if (!isPaused) &#123;</span><br><span class="line">      request.begin(); // 开始</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      pendingRequests.add(request); // 挂起请求</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续看一下SingleRequest中的begin方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">  public void begin() &#123;</span><br><span class="line">    stateVerifier.throwIfRecycled();</span><br><span class="line">    startTime = LogTime.getLogTime();</span><br><span class="line">	// 如果model空的，那么是不能执行的。 这里的model就是前面提到的RequestBuilder中的model</span><br><span class="line">    if (model == null) &#123;</span><br><span class="line">      if (Util.isValidDimensions(overrideWidth, overrideHeight)) &#123;</span><br><span class="line">        width = overrideWidth;</span><br><span class="line">        height = overrideHeight;</span><br><span class="line">      &#125;</span><br><span class="line">      // Only log at more verbose log levels if the user has set a fallback drawable, because</span><br><span class="line">      // fallback Drawables indicate the user expects null models occasionally.</span><br><span class="line">      int logLevel = getFallbackDrawable() == null ? Log.WARN : Log.DEBUG;</span><br><span class="line">      onLoadFailed(new GlideException(&quot;Received null model&quot;), logLevel);</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    status = Status.WAITING_FOR_SIZE;</span><br><span class="line">	// 如果当前的View尺寸已经加载获取到了，那么就会进入真正的加载流程。</span><br><span class="line">    if (Util.isValidDimensions(overrideWidth, overrideHeight)) &#123;</span><br><span class="line">      onSizeReady(overrideWidth, overrideHeight);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">	// 反之，当前View还没有画出来，那么是没有尺寸的。</span><br><span class="line">	// 这里会调用到ViewTreeObserver.addOnPreDrawListener。</span><br><span class="line">	// 等待View的尺寸都ok，才会继续</span><br><span class="line">      target.getSize(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 如果等待和正在执行状态，那么当前会加载占位符Drawable</span><br><span class="line">    if ((status == Status.RUNNING || status == Status.WAITING_FOR_SIZE)</span><br><span class="line">        &amp;&amp; canNotifyStatusChanged()) &#123;</span><br><span class="line">      target.onLoadStarted(getPlaceholderDrawable());</span><br><span class="line">    &#125;</span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logV(&quot;finished run method in &quot; + LogTime.getElapsedMillis(startTime));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来是target.getSize(this)方法。这里主要说一下尺寸未加载出来的情况(ViewTarget.java)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">void getSize(SizeReadyCallback cb) &#123;</span><br><span class="line">      int currentWidth = getViewWidthOrParam();</span><br><span class="line">      int currentHeight = getViewHeightOrParam();</span><br><span class="line">      if (isSizeValid(currentWidth) &amp;&amp; isSizeValid(currentHeight)) &#123;</span><br><span class="line">        cb.onSizeReady(currentWidth, currentHeight);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        // We want to notify callbacks in the order they were added and we only expect one or two</span><br><span class="line">        // callbacks to</span><br><span class="line">        // be added a time, so a List is a reasonable choice.</span><br><span class="line">        if (!cbs.contains(cb)) &#123;</span><br><span class="line">          cbs.add(cb);</span><br><span class="line">        &#125;</span><br><span class="line">        if (layoutListener == null) &#123;</span><br><span class="line">          final ViewTreeObserver observer = view.getViewTreeObserver();</span><br><span class="line">          layoutListener = new SizeDeterminerLayoutListener(this);</span><br><span class="line">		  // 绘画之前加入尺寸的监听。这一点我想大部分Android开发同学应该都知道。</span><br><span class="line">		  // 接下来在看看系统触发该Listener时target又干了些什么。</span><br><span class="line">          observer.addOnPreDrawListener(layoutListener);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private static class SizeDeterminerLayoutListener implements ViewTreeObserver</span><br><span class="line">        .OnPreDrawListener &#123;</span><br><span class="line">		// 注意这里是弱引用</span><br><span class="line">      private final WeakReference&lt;SizeDeterminer&gt; sizeDeterminerRef;</span><br><span class="line"></span><br><span class="line">      public SizeDeterminerLayoutListener(SizeDeterminer sizeDeterminer) &#123;</span><br><span class="line">        sizeDeterminerRef = new WeakReference&lt;&gt;(sizeDeterminer);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override</span><br><span class="line">      public boolean onPreDraw() &#123;</span><br><span class="line">        if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">          Log.v(TAG, &quot;OnGlobalLayoutListener called listener=&quot; + this);</span><br><span class="line">        &#125;</span><br><span class="line">        SizeDeterminer sizeDeterminer = sizeDeterminerRef.get();</span><br><span class="line">        if (sizeDeterminer != null) &#123;</span><br><span class="line">		 // 通知SizeDeterminer去重新检查尺寸，并触发后续操作。</span><br><span class="line">		 // SizeDeterminer有点像工具类，又作为尺寸回调的检测接口</span><br><span class="line">          sizeDeterminer.checkCurrentDimens();</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ok，继续回到SingleRequest.onSizeReady方法,主要就是Engine发起load操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public void onSizeReady(int width, int height) &#123;</span><br><span class="line">    stateVerifier.throwIfRecycled();</span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logV(&quot;Got onSizeReady in &quot; + LogTime.getElapsedMillis(startTime));</span><br><span class="line">    &#125;</span><br><span class="line">    if (status != Status.WAITING_FOR_SIZE) &#123;</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line">    status = Status.RUNNING;</span><br><span class="line"></span><br><span class="line">    float sizeMultiplier = requestOptions.getSizeMultiplier();</span><br><span class="line">    this.width = Math.round(sizeMultiplier * width);</span><br><span class="line">    this.height = Math.round(sizeMultiplier * height);</span><br><span class="line"></span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logV(&quot;finished setup for calling load in &quot; + LogTime.getElapsedMillis(startTime));</span><br><span class="line">    &#125;</span><br><span class="line">    loadStatus = engine.load(</span><br><span class="line">        glideContext,</span><br><span class="line">        model,</span><br><span class="line">        requestOptions.getSignature(),</span><br><span class="line">        this.width,</span><br><span class="line">        this.height,</span><br><span class="line">        requestOptions.getResourceClass(),</span><br><span class="line">        transcodeClass,</span><br><span class="line">        priority,</span><br><span class="line">        requestOptions.getDiskCacheStrategy(),</span><br><span class="line">        requestOptions.getTransformations(),</span><br><span class="line">        requestOptions.isTransformationRequired(),</span><br><span class="line">        requestOptions.getOptions(),</span><br><span class="line">        requestOptions.isMemoryCacheable(),</span><br><span class="line">        this);</span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logV(&quot;finished onSizeReady in &quot; + LogTime.getElapsedMillis(startTime));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>特别的，所有的操作都是来之唯一一个Engine，它的创建是来至于Glide的初始化。如果有需要修改缓存配置的同学可以继续看一下diskCacheFactory的创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (engine == null) &#123;</span><br><span class="line">      engine = new Engine(memoryCache, diskCacheFactory, diskCacheExecutor, sourceExecutor);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续看一下Engine.load的详细过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">public &lt;R&gt; LoadStatus load(</span><br><span class="line">      GlideContext glideContext,</span><br><span class="line">      Object model,</span><br><span class="line">      Key signature,</span><br><span class="line">      int width,</span><br><span class="line">      int height,</span><br><span class="line">      Class&lt;?&gt; resourceClass,</span><br><span class="line">      Class&lt;R&gt; transcodeClass,</span><br><span class="line">      Priority priority,</span><br><span class="line">      DiskCacheStrategy diskCacheStrategy,</span><br><span class="line">      Map&lt;Class&lt;?&gt;, Transformation&lt;?&gt;&gt; transformations,</span><br><span class="line">      boolean isTransformationRequired,</span><br><span class="line">      Options options,</span><br><span class="line">      boolean isMemoryCacheable,</span><br><span class="line">      ResourceCallback cb) &#123;</span><br><span class="line">    Util.assertMainThread();</span><br><span class="line">    long startTime = LogTime.getLogTime();</span><br><span class="line"></span><br><span class="line">	// 创建key，这是给每次加载资源的唯一标示。</span><br><span class="line">    EngineKey key = keyFactory.buildKey(model, signature, width, height, transformations,</span><br><span class="line">        resourceClass, transcodeClass, options);</span><br><span class="line"></span><br><span class="line">	// 通过key查找缓存资源 （PS 这里的缓存主要是内存中的缓存，切记,可以查看MemoryCache）</span><br><span class="line">    EngineResource&lt;?&gt; cached = loadFromCache(key, isMemoryCacheable);</span><br><span class="line">    if (cached != null) &#123;</span><br><span class="line">	 // 如果有，那么直接利用当前缓存的资源。</span><br><span class="line">      cb.onResourceReady(cached, DataSource.MEMORY_CACHE);</span><br><span class="line">      if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">        logWithTimeAndKey(&quot;Loaded resource from cache&quot;, startTime, key);</span><br><span class="line">      &#125;</span><br><span class="line">      return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 这是一个二级内存的缓存引用，很简单用了一个Map&lt;Key, WeakReference&lt;EngineResource&lt;?&gt;&gt;&gt;装载起来的。</span><br><span class="line">	// 这个缓存主要是谁来放进去呢？ 可以参考上面一级内存缓存loadFromCache方法。</span><br><span class="line">    EngineResource&lt;?&gt; active = loadFromActiveResources(key, isMemoryCacheable);</span><br><span class="line">    if (active != null) &#123;</span><br><span class="line">      cb.onResourceReady(active, DataSource.MEMORY_CACHE);</span><br><span class="line">      if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">        logWithTimeAndKey(&quot;Loaded resource from active resources&quot;, startTime, key);</span><br><span class="line">      &#125;</span><br><span class="line">      return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 根据key获取缓存的job。</span><br><span class="line">    EngineJob current = jobs.get(key);</span><br><span class="line">    if (current != null) &#123;</span><br><span class="line">      current.addCallback(cb); // 给当前job添加上回调Callback</span><br><span class="line">      if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">        logWithTimeAndKey(&quot;Added to existing load&quot;, startTime, key);</span><br><span class="line">      &#125;</span><br><span class="line">      return new LoadStatus(cb, current);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 创建job</span><br><span class="line">    EngineJob&lt;R&gt; engineJob = engineJobFactory.build(key, isMemoryCacheable);</span><br><span class="line">    DecodeJob&lt;R&gt; decodeJob = decodeJobFactory.build(</span><br><span class="line">        glideContext,</span><br><span class="line">        model,</span><br><span class="line">        key,</span><br><span class="line">        signature,</span><br><span class="line">        width,</span><br><span class="line">        height,</span><br><span class="line">        resourceClass,</span><br><span class="line">        transcodeClass,</span><br><span class="line">        priority,</span><br><span class="line">        diskCacheStrategy,</span><br><span class="line">        transformations,</span><br><span class="line">        isTransformationRequired,</span><br><span class="line">        options,</span><br><span class="line">        engineJob);</span><br><span class="line">    jobs.put(key, engineJob);</span><br><span class="line">    engineJob.addCallback(cb);</span><br><span class="line">	// 放入线程池，执行</span><br><span class="line">    engineJob.start(decodeJob);</span><br><span class="line"></span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logWithTimeAndKey(&quot;Started new load&quot;, startTime, key);</span><br><span class="line">    &#125;</span><br><span class="line">    return new LoadStatus(cb, engineJob);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面有一些值得注意的地方：</p>
+<blockquote>
+<ol>
+<li>内存缓存：在Glide中默认是LruResourceCache。当然你也可以自定义；</li>
+<li>为何要两级内存缓存（loadFromActiveResources）。个人理解是一级缓存采用LRU算法进行缓存，并不能保证全部能命中，添加二级缓存提高命中率之用；</li>
+<li>EngineJob和DecodeJob各自职责：EngineJob充当了管理和调度者，主要负责加载和各类回调通知；DecodeJob是真正干活的劳动者，这个类实现了Runnable接口。</li>
+</ol>
+</blockquote>
+<p>下面来看看DecodeJob是如何执行的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">private void runWrapped() &#123;</span><br><span class="line">     switch (runReason) &#123;</span><br><span class="line">      case INITIALIZE:</span><br><span class="line">		// 初始化 获取下一个阶段状态</span><br><span class="line">        stage = getNextStage(Stage.INITIALIZE);</span><br><span class="line">        currentGenerator = getNextGenerator();</span><br><span class="line">		// 运行</span><br><span class="line">        runGenerators();</span><br><span class="line">        break;</span><br><span class="line">      case SWITCH_TO_SOURCE_SERVICE:</span><br><span class="line">        runGenerators();</span><br><span class="line">        break;</span><br><span class="line">      case DECODE_DATA:</span><br><span class="line">        decodeFromRetrievedData();</span><br><span class="line">        break;</span><br><span class="line">      default:</span><br><span class="line">        throw new IllegalStateException(&quot;Unrecognized run reason: &quot; + runReason);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">// 这里的阶段策略首先是从resource中寻找，然后再是data，，再是source</span><br><span class="line">private Stage getNextStage(Stage current) &#123;</span><br><span class="line">    switch (current) &#123;</span><br><span class="line">      case INITIALIZE: </span><br><span class="line">	  // 根据定义的缓存策略来回去下一个状态</span><br><span class="line">	  // 缓存策略来之于RequestBuilder的requestOptions域</span><br><span class="line">	  // 如果你有自定义的策略，可以调用RequestBuilder.apply方法即可</span><br><span class="line">	  // 详细的可用缓存策略请参看DiskCacheStrategy.java</span><br><span class="line">        return diskCacheStrategy.decodeCachedResource()</span><br><span class="line">            ? Stage.RESOURCE_CACHE : getNextStage(Stage.RESOURCE_CACHE);</span><br><span class="line">      case RESOURCE_CACHE:</span><br><span class="line">        return diskCacheStrategy.decodeCachedData()</span><br><span class="line">            ? Stage.DATA_CACHE : getNextStage(Stage.DATA_CACHE);</span><br><span class="line">      case DATA_CACHE:</span><br><span class="line">        return Stage.SOURCE;</span><br><span class="line">      case SOURCE:</span><br><span class="line">      case FINISHED:</span><br><span class="line">        return Stage.FINISHED;</span><br><span class="line">      default:</span><br><span class="line">        throw new IllegalArgumentException(&quot;Unrecognized stage: &quot; + current);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">// 根据Stage找到数据抓取生成器。</span><br><span class="line">private DataFetcherGenerator getNextGenerator() &#123;</span><br><span class="line">    switch (stage) &#123;</span><br><span class="line">      case RESOURCE_CACHE:</span><br><span class="line">	   // 产生含有降低采样/转换资源数据缓存文件的DataFetcher。</span><br><span class="line">        return new ResourceCacheGenerator(decodeHelper, this);</span><br><span class="line">      case DATA_CACHE:</span><br><span class="line">	   // 产生包含原始未修改的源数据缓存文件的DataFetcher。</span><br><span class="line">        return new DataCacheGenerator(decodeHelper, this);</span><br><span class="line">      case SOURCE:</span><br><span class="line">	  // 生成使用注册的ModelLoader和加载时提供的Model获取源数据规定的DataFetcher。</span><br><span class="line">      // 根据不同的磁盘缓存策略，源数据可首先被写入到磁盘，然后从缓存文件中加载，而不是直接返回。</span><br><span class="line">        return new SourceGenerator(decodeHelper, this);</span><br><span class="line">      case FINISHED:</span><br><span class="line">        return null;</span><br><span class="line">      default:</span><br><span class="line">        throw new IllegalStateException(&quot;Unrecognized stage: &quot; + stage);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>经过很多流程，最后来到了发起实际请求的地方SourceGenerator.startNext()方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> public boolean startNext() &#123;</span><br><span class="line">   if (dataToCache != null) &#123;</span><br><span class="line">     Object data = dataToCache;</span><br><span class="line">     dataToCache = null;</span><br><span class="line">     cacheData(data);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   if (sourceCacheGenerator != null &amp;&amp; sourceCacheGenerator.startNext()) &#123;</span><br><span class="line">     return true;</span><br><span class="line">   &#125;</span><br><span class="line">   sourceCacheGenerator = null;</span><br><span class="line"></span><br><span class="line">   loadData = null;</span><br><span class="line">   boolean started = false;</span><br><span class="line">// 查找ModelLoader</span><br><span class="line">   while (!started &amp;&amp; hasNextModelLoader()) &#123;</span><br><span class="line">     loadData = helper.getLoadData().get(loadDataListIndex++);</span><br><span class="line">     if (loadData != null</span><br><span class="line">         &amp;&amp; (helper.getDiskCacheStrategy().isDataCacheable(loadData.fetcher.getDataSource())</span><br><span class="line">         || helper.hasLoadPath(loadData.fetcher.getDataClass()))) &#123;</span><br><span class="line">       started = true;</span><br><span class="line">	根据model的fetcher加载数据</span><br><span class="line">       loadData.fetcher.loadData(helper.getPriority(), this);</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   return started;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的Model必须是实现了GlideModule接口的，fetcher是实现了DataFetcher接口。有兴趣同学可以继续看一下integration中的okhttp和volley工程。Glide主要采用了这两种网络libray来下载图片。</p>
+<p><strong>4.2.2 数据下载完成后的缓存处理SourceGenerator.onDataReady</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void onDataReady(Object data) &#123;</span><br><span class="line">  DiskCacheStrategy diskCacheStrategy = helper.getDiskCacheStrategy();</span><br><span class="line">  if (data != null &amp;&amp; diskCacheStrategy.isDataCacheable(loadData.fetcher.getDataSource())) &#123;</span><br><span class="line">    dataToCache = data;</span><br><span class="line">    // We might be being called back on someone else&apos;s thread. Before doing anything, we should</span><br><span class="line">    // reschedule to get back onto Glide&apos;s thread.</span><br><span class="line">    cb.reschedule();</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    cb.onDataFetcherReady(loadData.sourceKey, data, loadData.fetcher,</span><br><span class="line">        loadData.fetcher.getDataSource(), originalKey);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有些小伙伴可能看不太明白为什么就一个dataToCache = data就完了…其实cb.reschedule()很重要，这里的cb就是DecodeJob.reschedule():<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void reschedule() &#123;</span><br><span class="line">    runReason = RunReason.SWITCH_TO_SOURCE_SERVICE;</span><br><span class="line">    callback.reschedule(this);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里又有一个Callback，继续追踪，这里的Callback接口是定义在DecodeJob内的，而实现是在外部的Engine中（这里会用线程池重新启动当前job，那为什么要这样做呢？源码中的解释是为了不同线程的切换，因为下载都是借用第三方网络库，而实际的编解码是在Glide自定义的线程池中进行的）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void reschedule(DecodeJob&lt;?&gt; job) &#123;</span><br><span class="line">  if (isCancelled) &#123;</span><br><span class="line">    MAIN_THREAD_HANDLER.obtainMessage(MSG_CANCELLED, this).sendToTarget();</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    sourceExecutor.execute(job);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来继续DecodeJob.runWrapped()方法。这个时候的runReason是SWITCH_TO_SOURCE_SERVICE，因此直接执行runGenerators()，这里继续执行SourceGenerator.startNext()方法，值得注意的dataToCache域，因为上一次执行的时候是下载，因此再次执行的时候内存缓存已经存在，因此直接缓存数据cacheData(data)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">private void cacheData(Object dataToCache) &#123;</span><br><span class="line">   long startTime = LogTime.getLogTime();</span><br><span class="line">   try &#123;</span><br><span class="line">// 根据不同的数据获取注册的不同Encoder</span><br><span class="line">     Encoder&lt;Object&gt; encoder = helper.getSourceEncoder(dataToCache);</span><br><span class="line">     DataCacheWriter&lt;Object&gt; writer =</span><br><span class="line">         new DataCacheWriter&lt;&gt;(encoder, dataToCache, helper.getOptions());</span><br><span class="line">     originalKey = new DataCacheKey(loadData.sourceKey, helper.getSignature());</span><br><span class="line">  // 这里的DiskCache实现是Engine中LazyDiskCacheProvider提供的DiskCacheAdapter。</span><br><span class="line">     helper.getDiskCache().put(originalKey, writer);</span><br><span class="line">     if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">       Log.v(TAG, &quot;Finished encoding source to cache&quot;</span><br><span class="line">           + &quot;, key: &quot; + originalKey</span><br><span class="line">           + &quot;, data: &quot; + dataToCache</span><br><span class="line">           + &quot;, encoder: &quot; + encoder</span><br><span class="line">           + &quot;, duration: &quot; + LogTime.getElapsedMillis(startTime));</span><br><span class="line">     &#125;</span><br><span class="line">   &#125; finally &#123;</span><br><span class="line">     loadData.fetcher.cleanup();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">// 创建针对缓存的Generator</span><br><span class="line">   sourceCacheGenerator =</span><br><span class="line">       new DataCacheGenerator(Collections.singletonList(loadData.sourceKey), helper, this);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续回到SourceGenerator.startNext()方法，这个时候已经有了sourceCacheGenerator，那么直接执行DataCacheGenerator.startNext()方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public boolean startNext() &#123;</span><br><span class="line">    while (modelLoaders == null || !hasNextModelLoader()) &#123;</span><br><span class="line">      sourceIdIndex++;</span><br><span class="line">      if (sourceIdIndex &gt;= cacheKeys.size()) &#123;</span><br><span class="line">        return false;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      Key sourceId = cacheKeys.get(sourceIdIndex);</span><br><span class="line">      Key originalKey = new DataCacheKey(sourceId, helper.getSignature());</span><br><span class="line">      cacheFile = helper.getDiskCache().get(originalKey);</span><br><span class="line">      if (cacheFile != null) &#123;</span><br><span class="line">        this.sourceKey = sourceId;</span><br><span class="line">        modelLoaders = helper.getModelLoaders(cacheFile);</span><br><span class="line">        modelLoaderIndex = 0;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    loadData = null;</span><br><span class="line">    boolean started = false;</span><br><span class="line">	// 这里会通过model寻找注册过的ModelLoader</span><br><span class="line">    while (!started &amp;&amp; hasNextModelLoader()) &#123;</span><br><span class="line">      ModelLoader&lt;File, ?&gt; modelLoader = modelLoaders.get(modelLoaderIndex++);</span><br><span class="line">      loadData =</span><br><span class="line">          modelLoader.buildLoadData(cacheFile, helper.getWidth(), helper.getHeight(),</span><br><span class="line">              helper.getOptions());</span><br><span class="line">	  // 通过FileLoader继续加载数据</span><br><span class="line">      if (loadData != null &amp;&amp; helper.hasLoadPath(loadData.fetcher.getDataClass())) &#123;</span><br><span class="line">        started = true;</span><br><span class="line">        loadData.fetcher.loadData(helper.getPriority(), this);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return started;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的ModelLoader跟之前提到过的Register的模块加载器（ModelLoader）对应是modelLoaderRegistry域，具体执行的操作是Registry.getModelLoaders(…)方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public &lt;Model&gt; List&lt;ModelLoader&lt;Model, ?&gt;&gt; getModelLoaders(Model model) &#123;</span><br><span class="line">   List&lt;ModelLoader&lt;Model, ?&gt;&gt; result = modelLoaderRegistry.getModelLoaders(model);</span><br><span class="line">   if (result.isEmpty()) &#123;</span><br><span class="line">     throw new NoModelLoaderAvailableException(model);</span><br><span class="line">   &#125;</span><br><span class="line">   return result;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续回到DataCacheGenerator.startNext()方法，找到了ModelLoader，这里笔者跟踪到的是FileLoader类(FileFetcher.loadData(…)方法)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void loadData(Priority priority, DataCallback&lt;? super Data&gt; callback) &#123;</span><br><span class="line">	// 读取文件数据</span><br><span class="line">     try &#123;</span><br><span class="line">       data = opener.open(file);</span><br><span class="line">     &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">       if (Log.isLoggable(TAG, Log.DEBUG)) &#123;</span><br><span class="line">         Log.d(TAG, &quot;Failed to open file&quot;, e);</span><br><span class="line">       &#125;</span><br><span class="line">	//失败</span><br><span class="line">       callback.onLoadFailed(e);</span><br><span class="line">       return;</span><br><span class="line">     &#125;</span><br><span class="line">  // 成功</span><br><span class="line">     callback.onDataReady(data);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>4.2.3 装载流程</strong><br>回调通知这里就不打算多讲了，主要线路如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--&gt;DataCacheGenerator.onDataReady</span><br><span class="line">  --&gt;SourceGenerator.onDataFetcherReady</span><br><span class="line">    --&gt;DecodeJob.onDataFetcherReady</span><br><span class="line">	--&gt;DecodeJob.decodeFromRetrievedData</span><br><span class="line">	--&gt;DecodeJob.notifyEncodeAndRelease</span><br><span class="line">	--&gt;DecodeJob.notifyComplete</span><br><span class="line">	  --&gt;EngineJob.onResourceReady</span><br></pre></td></tr></table></figure></p>
+<p>Debug流程图：<br><img src="http://frodoking.github.io/img/glide/Glide_Decode_Exe.png" alt="装载流程Debug流程图"><br>需要说明的就是在EngineJob中有一个Handler叫MAIN_THREAD_HANDLER。为了实现在主UI中装载资源的作用，ok继续上边的流程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--&gt;EngineJob.handleResultOnMainThread</span><br><span class="line">  --&gt;SingleRequest.onResourceReady</span><br><span class="line">    --&gt;ImageViewTarget.onResourceReady</span><br><span class="line">    --&gt;ImageViewTarget.setResource</span><br><span class="line">      --&gt;ImageView.setImageDrawable/ImageView.setImageBitmap</span><br></pre></td></tr></table></figure></p>
+<p>Debug流程图2：<br><img src="http://frodoking.github.io/img/glide/Glide_Response_Exe.png" alt="装载流程Debug流程图2"><br>数据的装载过程中有一个很重要的步骤就是decode，这个操作发生在DecodeJob.decodeFromRetrievedData的时候，继续看代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void decodeFromRetrievedData() &#123;</span><br><span class="line">    if (Log.isLoggable(TAG, Log.VERBOSE)) &#123;</span><br><span class="line">      logWithTimeAndKey(&quot;Retrieved data&quot;, startFetchTime,</span><br><span class="line">          &quot;data: &quot; + currentData</span><br><span class="line">          + &quot;, cache key: &quot; + currentSourceKey</span><br><span class="line">          + &quot;, fetcher: &quot; + currentFetcher);</span><br><span class="line">    &#125;</span><br><span class="line">    Resource&lt;R&gt; resource = null;</span><br><span class="line">    try &#123;</span><br><span class="line">      resource = decodeFromData(currentFetcher, currentData, currentDataSource);</span><br><span class="line">    &#125; catch (GlideException e) &#123;</span><br><span class="line">      e.setLoggingDetails(currentAttemptingKey, currentDataSource);</span><br><span class="line">      exceptions.add(e);</span><br><span class="line">    &#125;</span><br><span class="line">    if (resource != null) &#123;</span><br><span class="line">      notifyEncodeAndRelease(resource, currentDataSource);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      runGenerators();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这中间发生了很多转换主要流程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--&gt;DecodeJob.decodeFromData</span><br><span class="line">--&gt;DecodeJob.decodeFromFetcher</span><br><span class="line">--&gt;DecodeJob.runLoadPath</span><br><span class="line">  --&gt;LoadPath.load</span><br><span class="line">  --&gt;LoadPath.loadWithExceptionList</span><br><span class="line">  --&gt;LoadPath.decode</span><br><span class="line">  --&gt;LoadPath.decodeResource</span><br><span class="line">  --&gt;LoadPath.decodeResourceWithList</span><br><span class="line">    --&gt;ResourceDecoder.handles</span><br><span class="line">    --&gt;ResourceDecoder.decode</span><br></pre></td></tr></table></figure></p>
+<p>这里讲到了decode，那么encode发生在什么时候呢？直接通过Encoder接口调用发现，在数据缓存的时候才会触发编码。具体调用在DiskLruCacheWrapper和DataCacheWriter中。一些值得参考的写法例如BitmapEncoder对Bitmap的压缩处理。</p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>最近看开源库Glide关注度一直比较高，因此打算一探究竟。 由于时间比较紧，因此一些应该有的时序图没有画，这里也只能简单用箭头代替。不过个人认为整体执行流程已经表达清楚了。</p>
+<blockquote>
+<ol>
+<li>总体来说代码写的挺漂亮的，单从使用者角度来说入手是比较容易的。</li>
+<li>源码使用了大量的工厂方法来创建对象，就像String.valueof(…)方法一样，这也体现编码的优雅。</li>
+<li>不过想要对这个库进行改造，可能并非易事，笔者在跟踪代码的过程中发现很多地方有Callback这样的接口，来来回回查找几次很容易就晕头转向了。。。</li>
+<li>另外一个感觉难受的地方就是构造方法带入参数太多，就拿SingleRequest来说就是12个构造参数。</li>
+<li>单例的使用感觉还是有些模糊，就比如GlideContext，有些时候通过Glide.get(context).getGlideContext()获取，而有些类中采用构造传入。个人觉得既然让Glide作为单例，那么还这样传入参数是不是有点多余？代码的编写都是可以折中考虑，不过如果整个项目拟定好了一个规则的话，我想最好还是遵循它。另外再吐槽一下单例，很多开发人员喜欢用单例，如果你是有代码洁癖的开发者，那么你肯定很讨厌这样，单例很容易造成代码的散落和结构不清晰。</li>
+</ol>
+</blockquote>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>源码的解析只是把最重要的加载流程走了一遍，有一些比较细节的地方没有关注，如果你有需要，可以自己跟着这个主线debug一下就能查找到。</p>
+<blockquote>
+<ol>
+<li>为何要使用额外的无界面的Fragment？</li>
+<li>如果开发者要使用这个libray作为图片加载库，而且项目本身对App的内存占用和Size都是有要求的话，那么Register是否有过重的嫌疑？</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/09/android-app-framework/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-glide" data-title="" data-url="http://frodoking.github.io/2016/03/09/android-glide/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Frodo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
