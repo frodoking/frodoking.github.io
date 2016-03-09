@@ -6,15 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Frodo&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Blog">
+  <meta name="description" content="技术海洋中一名默默的Geek">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Frodo's Blog">
 <meta property="og:url" content="http://frodoking.github.io/index.html">
 <meta property="og:site_name" content="Frodo's Blog">
-<meta property="og:description" content="Blog">
+<meta property="og:description" content="技术海洋中一名默默的Geek">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Frodo's Blog">
-<meta name="twitter:description" content="Blog">
+<meta name="twitter:description" content="技术海洋中一名默默的Geek">
   
     <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
   
@@ -199,105 +199,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-android-glide" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/09/android-glide/" class="article-date">
-  	<time datetime="2016-03-09T09:25:22.748Z" itemprop="datePublished">3月 9 2016</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>title: Android Glide源码解析<br>date: 2015-10-10 11:03:19<br>tags: [Android,Java]</p>
-<h2 id="categories-编程-源码"><a href="#categories-编程-源码" class="headerlink" title="categories: [编程,源码]"></a>categories: [编程,源码]</h2><h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>使用文章介绍以及和Picasso的对比分析请参考<a href="http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en">Introduction to Glide, Image Loader Library for Android, recommended by Google</a></p>
-<p>由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。<br>本文基于github上Glide最新代码4.0.0版本做解析。<br>最基本的使用方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(this)</span><br><span class="line">                .asDrawable()</span><br><span class="line">                .load(&quot;http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg&quot;)</span><br><span class="line">                .apply(fitCenterTransform(this))</span><br><span class="line">                .apply(placeholderOf(R.drawable.skyblue_logo_wechatfavorite_checked))</span><br><span class="line">                .into(imageView);</span><br></pre></td></tr></table></figure></p>
-<p>Glide使用了现在非常流行的流氏编码方式，方便了开发者的使用，简明、扼要。<br>接下来主要对上面这一段流氏操作做拆分。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/03/09/android-glide/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-android-app-framework" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/09/android-app-framework/" class="article-date">
-  	<time datetime="2016-03-09T09:25:22.740Z" itemprop="datePublished">3月 9 2016</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>title: App项目架构解决方案<br>date: 2015-09-15 16:54:54<br>tags: [Android,Java]</p>
-<h2 id="categories-编程-架构"><a href="#categories-编程-架构" class="headerlink" title="categories: [编程,架构]"></a>categories: [编程,架构]</h2><p>App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/03/09/android-app-framework/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-android-weekly" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/03/01/android-weekly/" class="article-date">
-  	<time datetime="2016-03-01T03:30:27.000Z" itemprop="datePublished">3月 1 2016</time>
+  	<time datetime="2016-03-01T03:30:27.000Z" itemprop="datePublished">Mar 1</time>
 </a>
     </div>
   
@@ -379,7 +285,7 @@
   
     <div class="article-meta">
       <a href="/2015/11/11/screaming-architecture/" class="article-date">
-  	<time datetime="2015-11-11T07:19:38.000Z" itemprop="datePublished">11月 11 2015</time>
+  	<time datetime="2015-11-11T07:19:38.000Z" itemprop="datePublished">Nov 11</time>
 </a>
     </div>
   
@@ -438,11 +344,141 @@
 
 
   
+    <article id="post-android-glide" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/10/android-glide/" class="article-date">
+  	<time datetime="2015-10-10T03:03:19.000Z" itemprop="datePublished">Oct 10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/10/android-glide/">Android Glide源码解析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>使用文章介绍以及和Picasso的对比分析请参考<a href="http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en">Introduction to Glide, Image Loader Library for Android, recommended by Google</a></p>
+<p>由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。<br>本文基于github上Glide最新代码4.0.0版本做解析。<br>最基本的使用方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(this)</span><br><span class="line">                .asDrawable()</span><br><span class="line">                .load(&quot;http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg&quot;)</span><br><span class="line">                .apply(fitCenterTransform(this))</span><br><span class="line">                .apply(placeholderOf(R.drawable.skyblue_logo_wechatfavorite_checked))</span><br><span class="line">                .into(imageView);</span><br></pre></td></tr></table></figure></p>
+<p>Glide使用了现在非常流行的流氏编码方式，方便了开发者的使用，简明、扼要。<br>接下来主要对上面这一段流氏操作做拆分。<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/10/android-glide/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-android-app-framework" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/15/android-app-framework/" class="article-date">
+  	<time datetime="2015-09-15T08:54:54.000Z" itemprop="datePublished">Sep 15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/15/android-app-framework/">App项目架构解决方案</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/09/15/android-app-framework/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-reactivex" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2015/09/08/reactivex/" class="article-date">
-  	<time datetime="2015-09-08T06:47:15.000Z" itemprop="datePublished">9月 8 2015</time>
+  	<time datetime="2015-09-08T06:47:15.000Z" itemprop="datePublished">Sep 8</time>
 </a>
     </div>
   
@@ -506,7 +542,7 @@
   
     <div class="article-meta">
       <a href="/2015/07/19/java-concurrent-mechanism/" class="article-date">
-  	<time datetime="2015-07-19T02:10:06.000Z" itemprop="datePublished">7月 19 2015</time>
+  	<time datetime="2015-07-19T02:10:06.000Z" itemprop="datePublished">Jul 19</time>
 </a>
     </div>
   
@@ -573,7 +609,7 @@
   
     <div class="article-meta">
       <a href="/2015/07/01/android-theme/" class="article-date">
-  	<time datetime="2015-07-01T09:25:47.000Z" itemprop="datePublished">7月 1 2015</time>
+  	<time datetime="2015-07-01T09:25:47.000Z" itemprop="datePublished">Jul 1</time>
 </a>
     </div>
   
@@ -637,7 +673,7 @@
   
     <div class="article-meta">
       <a href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/" class="article-date">
-  	<time datetime="2015-06-29T03:08:46.000Z" itemprop="datePublished">6月 29 2015</time>
+  	<time datetime="2015-06-29T03:08:46.000Z" itemprop="datePublished">Jun 29</time>
 </a>
     </div>
   
@@ -698,140 +734,9 @@
 
 
   
-    <article id="post-android-retrofit" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/05/16/android-retrofit/" class="article-date">
-  	<time datetime="2015-05-16T03:59:24.000Z" itemprop="datePublished">5月 16 2015</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/16/android-retrofit/">Retrofit源码解析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前花了一段时间整理过一篇文章<a href="/2015/03/12/android-okhttp/">OKHttp源码解析</a>。所以今天打算把一个包装工具Retrofit做一下源码解析。</p>
-<p>Retrofit和Java领域的ORM概念类似，ORM把结构化数据转换为Java对象，而Retrofit把REST API返回的数据转化为Java对象方便操作。同时还封装了网络代码的调用。这个网络代码默认采用了OKHttp的方式。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/05/16/android-retrofit/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-ide-from-eclipse-to-intellij" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/05/10/ide-from-eclipse-to-intellij/" class="article-date">
-  	<time datetime="2015-05-10T13:39:23.000Z" itemprop="datePublished">5月 10 2015</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/10/ide-from-eclipse-to-intellij/">从Eclipse到Intellij</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>由于本人最近项目做过一次从eclipse到intellij切换的分享会，本来打算把相关的技术文档发给组员就可以完事。但是发现很多同学在切换的过程中仍然感觉到很难受，所以我打算把这次分享会的内容以文章的形式呈现出来。给更多的同学使用。</p>
-<p>此文章是个人工作中的一次总结，当看到网上很多ctrl+c，ctrl+v的文章的时候。个人觉得还不如自己总结一下整个流程来得真实。这也是写本文章的一个动机。</p>
-<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>在我们公司将软件工程师简称RD（Research Development）。所以我们从事着一份富有创造力和探究精神的职业。我们秉承软件工程师 ≠ 码农的职业路线，在科学技术的道路上不断探索、创造和前行着。我相信跟我同样职业的大部分人都有着自己“高傲”的一面，遇到问题解决问题以及不服的劲头经常出现。我是一个有着代码洁癖的人，以前遇到一个很好的架构师对方法和{}之间的空隙都有着严格的要求。当时的我是那么的不理解，但是当代码量越来越大的时候，好的编码格式就体现的是那么的明显。工作中好的东西需要我们有敢于尝试的勇气，这样对于我们提升自己我驱动的效率会高很多。所以很希望同行的同学们都保持一种高质量的创造水准，一起同行吧。。。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tools/">tools</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/programming/">编程</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/05/10/ide-from-eclipse-to-intellij/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </div>

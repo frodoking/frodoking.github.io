@@ -4,22 +4,19 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Frodo&#39;s Blog</title>
+  <title>App项目架构解决方案 | Frodo&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
-categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+  <meta name="description" content="App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Frodo's Blog">
-<meta property="og:url" content="http://frodoking.github.io/2016/03/09/android-app-framework/index.html">
+<meta property="og:title" content="App项目架构解决方案">
+<meta property="og:url" content="http://frodoking.github.io/2015/09/15/android-app-framework/index.html">
 <meta property="og:site_name" content="Frodo's Blog">
-<meta property="og:description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
-categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+<meta property="og:description" content="App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。">
 <meta property="og:image" content="http://frodoking.github.io/img/App-Architecture.png">
-<meta property="og:updated_time" content="2016-01-04T07:17:50.464Z">
+<meta property="og:updated_time" content="2016-03-09T10:09:45.007Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frodo's Blog">
-<meta name="twitter:description" content="title: App项目架构解决方案date: 2015-09-15 16:54:54tags: [Android,Java]
-categories: [编程,架构]App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。">
+<meta name="twitter:title" content="App项目架构解决方案">
+<meta name="twitter:description" content="App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。">
 <meta name="twitter:image" content="http://frodoking.github.io/img/App-Architecture.png">
   
     <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
@@ -206,8 +203,8 @@ categories: [编程,架构]App-Architecture是一个关于移动应用一整套�
       <div class="body-wrap"><article id="post-android-app-framework" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/03/09/android-app-framework/" class="article-date">
-  	<time datetime="2016-03-09T09:25:22.740Z" itemprop="datePublished">3月 9 2016</time>
+      <a href="/2015/09/15/android-app-framework/" class="article-date">
+  	<time datetime="2015-09-15T08:54:54.000Z" itemprop="datePublished">Sep 15</time>
 </a>
     </div>
   
@@ -216,10 +213,35 @@ categories: [编程,架构]App-Architecture是一个关于移动应用一整套�
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      App项目架构解决方案
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>title: App项目架构解决方案<br>date: 2015-09-15 16:54:54<br>tags: [Android,Java]</p>
-<h2 id="categories-编程-架构"><a href="#categories-编程-架构" class="headerlink" title="categories: [编程,架构]"></a>categories: [编程,架构]</h2><p>App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。</p>
+        <p>App-Architecture是一个关于移动应用一整套架构的解决方案开源项目。主要目的是整合流行开发模式结合自己本人的工作经验形成的一整套App快速开发解决方案。本套解决方案的app工程和simple工程主要基于Android实现。framework工程实现了主要架构，主要目的是抛开平台相关性。</p>
 <a id="more"></a>
 <p>项目主要包括两大部分</p>
 <h2 id="Framework层"><a href="#Framework层" class="headerlink" title="Framework层"></a>Framework层</h2><p>依托以java级别，主要提供底层API框架接口，提供一种编程思想同时从平台中剥离出来</p>
@@ -275,18 +297,18 @@ categories: [编程,架构]App-Architecture是一个关于移动应用一整套�
     
 <nav id="article-nav">
   
-    <a href="/2016/03/09/android-glide/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/10/10/android-glide/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          (no title)
+          Android Glide源码解析
         
       </div>
     </a>
   
   
-    <a href="/2016/03/01/android-weekly/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Android Weekly 值得收藏的项</div>
+    <a href="/2015/09/08/reactivex/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ReactiveX--响应式编程</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -321,7 +343,7 @@ categories: [编程,架构]App-Architecture是一个关于移动应用一整套�
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="android-app-framework" data-title="" data-url="http://frodoking.github.io/2016/03/09/android-app-framework/"></div>
+	<div class="ds-thread" data-thread-key="android-app-framework" data-title="App项目架构解决方案" data-url="http://frodoking.github.io/2015/09/15/android-app-framework/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

@@ -4,18 +4,16 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Frodo&#39;s Blog</title>
+  <title>Android Glide源码解析 | Frodo&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
-categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
-由于这篇">
+  <meta name="description" content="功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。本文基于github上Glide最新代码4.0.0版本做解析。最基本的使用方式如下：123456Glide.with(">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Frodo's Blog">
-<meta property="og:url" content="http://frodoking.github.io/2016/03/09/android-glide/index.html">
+<meta property="og:title" content="Android Glide源码解析">
+<meta property="og:url" content="http://frodoking.github.io/2015/10/10/android-glide/index.html">
 <meta property="og:site_name" content="Frodo's Blog">
-<meta property="og:description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
-categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
-由于这篇">
+<meta property="og:description" content="功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。本文基于github上Glide最新代码4.0.0版本做解析。最基本的使用方式如下：123456Glide.with(">
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_ModelLoaderDiagram.png">
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_DataFetcherDiagram.png">
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_TargetDiagram.png">
@@ -27,12 +25,11 @@ categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对�
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_EncoderDiagram.png">
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_Decode_Exe.png">
 <meta property="og:image" content="http://frodoking.github.io/img/glide/Glide_Response_Exe.png">
-<meta property="og:updated_time" content="2015-11-29T12:24:49.062Z">
+<meta property="og:updated_time" content="2016-03-09T10:09:27.886Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frodo's Blog">
-<meta name="twitter:description" content="title: Android Glide源码解析date: 2015-10-10 11:03:19tags: [Android,Java]
-categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
-由于这篇">
+<meta name="twitter:title" content="Android Glide源码解析">
+<meta name="twitter:description" content="功能介绍使用文章介绍以及和Picasso的对比分析请参考Introduction to Glide, Image Loader Library for Android, recommended by Google
+由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。本文基于github上Glide最新代码4.0.0版本做解析。最基本的使用方式如下：123456Glide.with(">
 <meta name="twitter:image" content="http://frodoking.github.io/img/glide/Glide_ModelLoaderDiagram.png">
   
     <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
@@ -219,8 +216,8 @@ categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对�
       <div class="body-wrap"><article id="post-android-glide" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/03/09/android-glide/" class="article-date">
-  	<time datetime="2016-03-09T09:25:22.748Z" itemprop="datePublished">3月 9 2016</time>
+      <a href="/2015/10/10/android-glide/" class="article-date">
+  	<time datetime="2015-10-10T03:03:19.000Z" itemprop="datePublished">Oct 10</time>
 </a>
     </div>
   
@@ -229,10 +226,35 @@ categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对�
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android Glide源码解析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>title: Android Glide源码解析<br>date: 2015-10-10 11:03:19<br>tags: [Android,Java]</p>
-<h2 id="categories-编程-源码"><a href="#categories-编程-源码" class="headerlink" title="categories: [编程,源码]"></a>categories: [编程,源码]</h2><h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>使用文章介绍以及和Picasso的对比分析请参考<a href="http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en" target="_blank" rel="external">Introduction to Glide, Image Loader Library for Android, recommended by Google</a></p>
+        <h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>使用文章介绍以及和Picasso的对比分析请参考<a href="http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en" target="_blank" rel="external">Introduction to Glide, Image Loader Library for Android, recommended by Google</a></p>
 <p>由于这篇文章使用glide的老版本，因此有些使用方法可能不太一致了。<br>本文基于github上Glide最新代码4.0.0版本做解析。<br>最基本的使用方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(this)</span><br><span class="line">                .asDrawable()</span><br><span class="line">                .load(&quot;http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg&quot;)</span><br><span class="line">                .apply(fitCenterTransform(this))</span><br><span class="line">                .apply(placeholderOf(R.drawable.skyblue_logo_wechatfavorite_checked))</span><br><span class="line">                .into(imageView);</span><br></pre></td></tr></table></figure></p>
 <p>Glide使用了现在非常流行的流氏编码方式，方便了开发者的使用，简明、扼要。<br>接下来主要对上面这一段流氏操作做拆分。<br><a id="more"></a></p>
 <h3 id="Glide-主入口"><a href="#Glide-主入口" class="headerlink" title="Glide 主入口"></a>Glide 主入口</h3><p>这个类有点像门脸模式的统一代理入口，不过实际作用在4.0.0中很多功能都被放到后面的其他类中，此类关注的点就很少了。虽然整个libray的所有需要的组建都在这个类中，但是实际也只是一个统一初始化的地方。</p>
@@ -317,9 +339,18 @@ categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对�
     
 <nav id="article-nav">
   
+    <a href="/2015/11/11/screaming-architecture/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          令人尖叫的架构
+        
+      </div>
+    </a>
   
-    <a href="/2016/03/09/android-app-framework/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
+  
+    <a href="/2015/09/15/android-app-framework/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">App项目架构解决方案</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -354,7 +385,7 @@ categories: [编程,源码]功能介绍使用文章介绍以及和Picasso的对�
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="android-glide" data-title="" data-url="http://frodoking.github.io/2016/03/09/android-glide/"></div>
+	<div class="ds-thread" data-thread-key="android-glide" data-title="Android Glide源码解析" data-url="http://frodoking.github.io/2015/10/10/android-glide/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
