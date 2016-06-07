@@ -199,6 +199,71 @@
 
       <div class="body-wrap">
   
+    <article id="post-android-okhttp-connectionpool-http1-x-http2-x" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/" class="article-date">
+  	<time datetime="2015-06-29T03:08:46.000Z" itemprop="datePublished">Jun 29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/">OKHttp源码解析-ConnectionPool对Connection重用机制&amp;Http/Https/SPDY协议选择</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>因文章很快被人转载到一些其他网站，所以本人在此声明：<br><strong>转载请标明转载出处：<a href="http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/">http://frodoking.github.io/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/</a> </strong></p>
+<p>距离上一次的<a href="/2015/03/12/android-okhttp/">OKHttp源码解析</a>过去快3月了。最近一直在忙工作上的事情，另外也再尝试一门新的语言Go。所以一直没花很多心思在Android这边。最近看到一些网友建议把okhttp的连接池对Connection的重用维护机制以及HTTP和SPDY协议如何得到区分这两个核心内容做深入的分析。<br>因此，这几天就打算好好说一说这块儿的实现方式。SPDY既是http1.x的增强版也是http2.x的过渡版本，虽然现在很多都直接切入到http2.0，不过SPDY的应用仍然值得关注。<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/source/">源码</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/06/29/android-okhttp-connectionpool-http1-x-http2-x/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-android-retrofit" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -654,71 +719,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/03/12/android-okhttp/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-android-dependency-injection-struction" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/02/10/android-dependency-injection-struction/" class="article-date">
-  	<time datetime="2015-02-10T08:17:51.000Z" itemprop="datePublished">Feb 10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/10/android-dependency-injection-struction/">依赖注入思路以及如何选择（Dagger、RoboGuice和ButterKnife）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在开发程序的时候，会用到各种对象，很多对象在使用之前都需要进行初始化。例如你要操作一个SharedPreference，你需要调用getSharedPreferences(String name,int mode)来获取一个对象，然后才能使用它。而如果这个对象会在多个Activity中被使用，你就需要在每个使用的场景中都写下同样的代码。这不仅麻烦，而且增加了出错的可能。依赖注入让你不需要初始化对象。换句话说，任何对象声明完了就能直接用。</p>
-<p>当涉及到Android上的依赖注入（DI.dependency injection）类库的时候，存在不少的选择，但怎么知道哪一个最适合你呢？下面将针对目前比较流行的三种依赖注入框架（Dagger、RoboGuice和ButterKnife）做进一步的对比和分析。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/programming/">编程</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/02/10/android-dependency-injection-struction/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

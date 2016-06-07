@@ -4,17 +4,28 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Category: 编程 | Frodo&#39;s Blog</title>
+  <title>Github Android Client | Frodo&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="技术海洋中一名默默的Geek">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Frodo's Blog">
-<meta property="og:url" content="http://frodoking.github.io/categories/programming/page/3/index.html">
+  <meta name="description" content="前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架App-Architecture，因此，花了一些时间编写了这个应用。 
+GithubAndroidClientGithubAndroidClient实现了的GitHub第三方Android客户端。 主要是用来展示GitHub上的开发者的排名，以及仓库的排名。发现模块，包括GitHub仓库的tren">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Github Android Client">
+<meta property="og:url" content="http://frodoking.github.io/2016/06/07/android-github-client/index.html">
 <meta property="og:site_name" content="Frodo's Blog">
-<meta property="og:description" content="技术海洋中一名默默的Geek">
+<meta property="og:description" content="前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架App-Architecture，因此，花了一些时间编写了这个应用。 
+GithubAndroidClientGithubAndroidClient实现了的GitHub第三方Android客户端。 主要是用来展示GitHub上的开发者的排名，以及仓库的排名。发现模块，包括GitHub仓库的tren">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/home.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/drawer.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/explore.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/explore-second.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/user.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/repo.png">
+<meta property="og:updated_time" content="2016-06-07T08:33:18.535Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frodo's Blog">
-<meta name="twitter:description" content="技术海洋中一名默默的Geek">
+<meta name="twitter:title" content="Github Android Client">
+<meta name="twitter:description" content="前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架App-Architecture，因此，花了一些时间编写了这个应用。 
+GithubAndroidClientGithubAndroidClient实现了的GitHub第三方Android客户端。 主要是用来展示GitHub上的开发者的排名，以及仓库的排名。发现模块，包括GitHub仓库的tren">
+<meta name="twitter:image" content="http://frodoking.github.io/img/github-client/home.png">
   
     <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
   
@@ -197,96 +208,123 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-android-github-client" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2014" class="archive-year">2014</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2014/12/21/android-fragment-lifecycle/" class="archive-article-date">
-  	<time datetime="2014-12-21T07:43:27.000Z" itemprop="datePublished">Dec 21</time>
+    <div class="article-meta">
+      <a href="/2016/06/07/android-github-client/" class="article-date">
+  	<time datetime="2016-06-07T08:27:28.000Z" itemprop="datePublished">Jun 7</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/12/21/android-fragment-lifecycle/">关于Fragment和Activity对比中的一些理解</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Github Android Client
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/optimization/">优化</a>
+	<a class="article-category-link" href="/categories/programming/">编程</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架<a href="https://github.com/frodoking/App-Architecture.git" target="_blank" rel="external">App-Architecture</a>，因此，花了一些时间编写了这个应用。 </p>
+<h2 id="GithubAndroidClient"><a href="#GithubAndroidClient" class="headerlink" title="GithubAndroidClient"></a>GithubAndroidClient</h2><p>GithubAndroidClient实现了的GitHub第三方Android客户端。 主要是用来展示GitHub上的开发者的排名，以及仓库的排名。发现模块，包括GitHub仓库的trending；GitHub动态；showcases；搜索；以及其他排名数据<br>开发者的排名是根据开发者的followers由高到低进行排名，有区分不同的语言和城市。仓库的排名是根据仓库的stars由高到低进行排名的，有区分不同的语言。</p>
+<p>这些数据是从GitHub提供的接口来的，地址是<a href="https://developer.github.com/v3/" target="_blank" rel="external">https://developer.github.com/v3/</a></p>
+<p>##About Open Source</p>
+<p>####IDE<br>Android studio 2.0<br>目前登录以及信息查看都已经跑通，还有很多功能未来得及开发，主要把核心功能开发基本完成，后续主要是填鸭式补充业务代码，因此希望有时间的开发者能一起同步来编写（一方面是个人时间不太够）。</p>
+<p>####Third Party Project<br><a href="https://github.com/frodoking/App-Architecture.git" target="_blank" rel="external">App-Architecture</a><br>app architecture on android platform. </p>
+<h2 id="Author-frodoking"><a href="#Author-frodoking" class="headerlink" title="Author(frodoking)"></a>Author(frodoking)</h2><ul>
+<li>Email: awangyun8@gmail.com</li>
+<li>Blog：<a href="http://frodoking.github.io/">http://frodoking.github.io/</a></li>
+</ul>
+<p>##App Master Drawing<br><img src="http://frodoking.github.io/img/github-client/home.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/drawer.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/explore.png" width="240" height="427"><img src="http://frodoking.github.io/img/github-client/explore-second.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/user.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/repo.png" width="240" height="427"></p>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/01/android-weekly/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android Weekly 值得收藏的项</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2014/10/01/android-app-whole-solution/" class="archive-article-date">
-  	<time datetime="2014-10-01T03:13:20.000Z" itemprop="datePublished">Oct 1</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/10/01/android-app-whole-solution/">关于Android中App的整体解决方案的一些思考</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">Java</a></li></ul>
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/programming/">编程</a><a class="article-category-link" href="/categories/programming/architecture/">架构</a>
-	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/categories/programming/page/2/">&laquo; Prev</a><a class="page-number" href="/categories/programming/">1</a><a class="page-number" href="/categories/programming/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
-  
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="android-github-client" data-title="Github Android Client" data-url="http://frodoking.github.io/2016/06/07/android-github-client/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 </div>
       <footer id="footer">
@@ -312,10 +350,10 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false
 	}
 </script>
