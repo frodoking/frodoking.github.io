@@ -12,17 +12,23 @@
 <meta property="og:url" content="http://frodoking.github.io/2016/06/07/android-github-client/index.html">
 <meta property="og:site_name" content="Frodo's Blog">
 <meta property="og:description" content="前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架App-Architecture，因此，花了一些时间编写了这个应用。另外个人相信针对拥有众多开发者的Github开发一个好的App是很有用的。">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/home.png">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/drawer.png">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/explore.png">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/explore-second.png">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/user.png">
-<meta property="og:image" content="http://frodoking.github.io/img/github-client/repo.png">
-<meta property="og:updated_time" content="2016-06-07T08:40:10.835Z">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-home.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-drawer.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-profile.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-notifications.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-issues.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-events.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-explore.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-showcases.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-repo.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-repo-issues.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-repo-pulse.png">
+<meta property="og:image" content="http://frodoking.github.io/img/github-client/github-repo-contents.png">
+<meta property="og:updated_time" content="2016-06-21T02:33:29.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github Android Client">
 <meta name="twitter:description" content="前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架App-Architecture，因此，花了一些时间编写了这个应用。另外个人相信针对拥有众多开发者的Github开发一个好的App是很有用的。">
-<meta name="twitter:image" content="http://frodoking.github.io/img/github-client/home.png">
+<meta name="twitter:image" content="http://frodoking.github.io/img/github-client/github-home.png">
   
     <link rel="alternative" href="/atom.xml" title="Frodo&#39;s Blog" type="application/atom+xml">
   
@@ -248,15 +254,42 @@
       
         <p>前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架<a href="https://github.com/frodoking/App-Architecture.git" target="_blank" rel="external">App-Architecture</a>，因此，花了一些时间编写了这个应用。另外个人相信针对拥有众多开发者的Github开发一个好的App是很有用的。</p>
 <a id="more"></a>
-<p>GithubAndroidClient实现了的GitHub第三方Android客户端。 主要是用来展示GitHub上的开发者的排名，以及仓库的排名。发现模块，包括GitHub仓库的trending；GitHub动态；showcases；搜索；以及其他排名数据<br>开发者的排名是根据开发者的followers由高到低进行排名，有区分不同的语言和城市。仓库的排名是根据仓库的stars由高到低进行排名的，有区分不同的语言。</p>
-<p>这些数据是从GitHub提供的接口来的，地址是<a href="https://developer.github.com/v3/" target="_blank" rel="external">https://developer.github.com/v3/</a></p>
-<h2 id="About-Open-Source"><a href="#About-Open-Source" class="headerlink" title="About Open Source"></a>About Open Source</h2><h4 id="IDE"><a href="#IDE" class="headerlink" title="IDE"></a>IDE</h4><p>Android studio 2.0<br>应用的所有效果来之于Github手机web端的效果。<br>目前登录以及信息查看都已经跑通，还有很多功能未来得及开发，主要把核心功能开发基本完成，后续主要是填鸭式补充业务代码，因此希望有时间的开发者能一起同步来编写（一方面是个人时间不太够）。</p>
-<h4 id="Third-Party-Project"><a href="#Third-Party-Project" class="headerlink" title="Third Party Project"></a>Third Party Project</h4><p><a href="https://github.com/frodoking/App-Architecture.git" target="_blank" rel="external">App-Architecture</a><br>app architecture on android platform. </p>
+<h2 id="GithubAndroidClient"><a href="#GithubAndroidClient" class="headerlink" title="GithubAndroidClient"></a>GithubAndroidClient</h2><p>This project is a Github client on Android platform, This App drawing  is based on the design of Github Web page(H5).</p>
+<p>##Feature</p>
+<ol>
+<li>account (Auth2.0/Sign in/Sign out)</li>
+<li>explore (showcases/repos)</li>
+<li>user (profile/followers/following)</li>
+<li>repo (detail/contents)</li>
+<li>events, notification, issues</li>
+<li>trending</li>
+</ol>
+<p>there are many features not yet implemented, you can contribute to it if you are interested in this project.</p>
+<p>##API</p>
+<ol>
+<li><a href="https://developer.github.com/v3/" target="_blank" rel="external">Github Developer</a></li>
+<li><a href="https://octicons.github.com/" target="_blank" rel="external">Octions</a></li>
+</ol>
+<p>##About Open Source</p>
+<p>####IDE<br>Android studio 2.0</p>
+<p>####Third Party Project</p>
+<ol>
+<li><a href="https://github.com/frodoking/App-Architecture.git" target="_blank" rel="external">App-Architecture</a><br> app architecture on android platform.</li>
+<li><a href="https://github.com/falnatsheh/MarkdownView" target="_blank" rel="external">MarkdownView</a><br> MarkdownView is an Android webview with the capablity of loading Markdown text or file and display it as HTML, it uses MarkdownJ and extends Android webview.</li>
+</ol>
 <h2 id="Author-frodoking"><a href="#Author-frodoking" class="headerlink" title="Author(frodoking)"></a>Author(frodoking)</h2><ul>
 <li>Email: awangyun8@gmail.com</li>
 <li>Blog：<a href="http://frodoking.github.io/">http://frodoking.github.io/</a></li>
 </ul>
-<h2 id="App-Master-Drawing"><a href="#App-Master-Drawing" class="headerlink" title="App Master Drawing"></a>App Master Drawing</h2><p><img src="http://frodoking.github.io/img/github-client/home.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/drawer.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/explore.png" width="240" height="427"><img src="http://frodoking.github.io/img/github-client/explore-second.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/user.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/repo.png" width="240" height="427"></p>
+<p>##Apk (v1.0.x snapshots)</p>
+<blockquote>
+<p>*<a href="https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk" target="_blank" rel="external">github-v1.0.1-snapshots-release.apk</a></p>
+<p>*<a href="https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk" target="_blank" rel="external">github-v1.0.2-snapshots-release.apk</a></p>
+<p>*<a href="https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk" target="_blank" rel="external">github-v1.0.3-snapshots-release.apk</a></p>
+</blockquote>
+<p>##App Master Drawing<br><img src="http://frodoking.github.io/img/github-client/github-home.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-drawer.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-profile.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-notifications.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-issues.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-events.png" width="240" height="427"></p>
+<p><img src="http://frodoking.github.io/img/github-client/github-explore.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-showcases.png" width="240" height="427"></p>
+<p><img src="http://frodoking.github.io/img/github-client/github-repo.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-repo-issues.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-repo-pulse.png" width="240" height="427"><br><img src="http://frodoking.github.io/img/github-client/github-repo-contents.png" width="240" height="427"></p>
 
       
     </div>
