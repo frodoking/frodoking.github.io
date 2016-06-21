@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://frodoking.github.io/"/>
-  <updated>2016-06-21T02:33:29.410Z</updated>
+  <updated>2016-06-21T02:36:19.203Z</updated>
   <id>http://frodoking.github.io/</id>
   
   <author>
@@ -20,13 +20,12 @@
     <link href="http://frodoking.github.io/2016/06/07/android-github-client/"/>
     <id>http://frodoking.github.io/2016/06/07/android-github-client/</id>
     <published>2016-06-07T08:27:28.000Z</published>
-    <updated>2016-06-21T02:33:29.410Z</updated>
+    <updated>2016-06-21T02:36:19.203Z</updated>
     
     <content type="html">&lt;p&gt;前一段时间找了很久Github在Android端上的App，但是无果。同时为了验证个人开源的App框架&lt;a href=&quot;https://github.com/frodoking/App-Architecture.git&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;App-Architecture&lt;/a&gt;，因此，花了一些时间编写了这个应用。另外个人相信针对拥有众多开发者的Github开发一个好的App是很有用的。&lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
 &lt;h2 id=&quot;GithubAndroidClient&quot;&gt;&lt;a href=&quot;#GithubAndroidClient&quot; class=&quot;headerlink&quot; title=&quot;GithubAndroidClient&quot;&gt;&lt;/a&gt;GithubAndroidClient&lt;/h2&gt;&lt;p&gt;This project is a Github client on Android platform, This App drawing  is based on the design of Github Web page(H5).&lt;/p&gt;
-&lt;p&gt;##Feature&lt;/p&gt;
-&lt;ol&gt;
+&lt;h2 id=&quot;Feature&quot;&gt;&lt;a href=&quot;#Feature&quot; class=&quot;headerlink&quot; title=&quot;Feature&quot;&gt;&lt;/a&gt;Feature&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;account (Auth2.0/Sign in/Sign out)&lt;/li&gt;
 &lt;li&gt;explore (showcases/repos)&lt;/li&gt;
 &lt;li&gt;user (profile/followers/following)&lt;/li&gt;
@@ -35,15 +34,12 @@
 &lt;li&gt;trending&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;there are many features not yet implemented, you can contribute to it if you are interested in this project.&lt;/p&gt;
-&lt;p&gt;##API&lt;/p&gt;
-&lt;ol&gt;
+&lt;h2 id=&quot;API&quot;&gt;&lt;a href=&quot;#API&quot; class=&quot;headerlink&quot; title=&quot;API&quot;&gt;&lt;/a&gt;API&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a href=&quot;https://developer.github.com/v3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github Developer&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://octicons.github.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Octions&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;##About Open Source&lt;/p&gt;
-&lt;p&gt;####IDE&lt;br&gt;Android studio 2.0&lt;/p&gt;
-&lt;p&gt;####Third Party Project&lt;/p&gt;
-&lt;ol&gt;
+&lt;h2 id=&quot;About-Open-Source&quot;&gt;&lt;a href=&quot;#About-Open-Source&quot; class=&quot;headerlink&quot; title=&quot;About Open Source&quot;&gt;&lt;/a&gt;About Open Source&lt;/h2&gt;&lt;h4 id=&quot;IDE&quot;&gt;&lt;a href=&quot;#IDE&quot; class=&quot;headerlink&quot; title=&quot;IDE&quot;&gt;&lt;/a&gt;IDE&lt;/h4&gt;&lt;p&gt;Android studio 2.0&lt;/p&gt;
+&lt;h4 id=&quot;Third-Party-Project&quot;&gt;&lt;a href=&quot;#Third-Party-Project&quot; class=&quot;headerlink&quot; title=&quot;Third Party Project&quot;&gt;&lt;/a&gt;Third Party Project&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/frodoking/App-Architecture.git&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;App-Architecture&lt;/a&gt;&lt;br&gt; app architecture on android platform.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/falnatsheh/MarkdownView&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;MarkdownView&lt;/a&gt;&lt;br&gt; MarkdownView is an Android webview with the capablity of loading Markdown text or file and display it as HTML, it uses MarkdownJ and extends Android webview.&lt;/li&gt;
 &lt;/ol&gt;
@@ -51,13 +47,14 @@
 &lt;li&gt;Email: awangyun8@gmail.com&lt;/li&gt;
 &lt;li&gt;Blog：&lt;a href=&quot;http://frodoking.github.io/&quot;&gt;http://frodoking.github.io/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;##Apk (v1.0.x snapshots)&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;*&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.1-snapshots-release.apk&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;*&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.2-snapshots-release.apk&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;*&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.3-snapshots-release.apk&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Apk-v1-0-x-snapshots&quot;&gt;&lt;a href=&quot;#Apk-v1-0-x-snapshots&quot; class=&quot;headerlink&quot; title=&quot;Apk (v1.0.x snapshots)&quot;&gt;&lt;/a&gt;Apk (v1.0.x snapshots)&lt;/h2&gt;&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.1-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.1-snapshots-release.apk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.2-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.2-snapshots-release.apk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/frodoking/GithubAndroidClient/releases/download/v1.0/github-v1.0.3-snapshots-release.apk&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github-v1.0.3-snapshots-release.apk&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;##App Master Drawing&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-home.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-drawer.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-profile.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-notifications.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-issues.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-events.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;App-Master-Drawing&quot;&gt;&lt;a href=&quot;#App-Master-Drawing&quot; class=&quot;headerlink&quot; title=&quot;App Master Drawing&quot;&gt;&lt;/a&gt;App Master Drawing&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-home.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-drawer.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-profile.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-notifications.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-issues.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-events.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-explore.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-showcases.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-repo.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-repo-issues.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-repo-pulse.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://frodoking.github.io/img/github-client/github-repo-contents.png&quot; width=&quot;240&quot; height=&quot;427&quot;&gt;&lt;/p&gt;
 </content>
